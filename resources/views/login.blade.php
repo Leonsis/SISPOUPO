@@ -11,12 +11,12 @@
                         <div class="row g-3">                             
                             <div class="mb-2">
                                 <label for="USUARIO" class="form-label">Usuario</label>
-                                <input type="USUARIO" class="form-control" id="USUARIO">
+                                <input type="USUARIO" class="form-control" name="nome_usuario">
                                 <div id="usuarioHelp" class="form-text">We'll never share your email with anyone else.</div>
                             </div>
                             <div class="mb-2">
                                 <label for="SENHA" class="form-label">Senha</label>
-                                <input type="password" class="form-control" id="SENHA">
+                                <input type="password" class="form-control" name="password">
                                 <div id="senhaHelp" class="form-text">We'll never share your email with anyone else.</div>
                             </div>
                         </div>

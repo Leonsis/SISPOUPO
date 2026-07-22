@@ -26,11 +26,11 @@ class LoginController extends Controller
         // Testes
         //dd('Está no LoginController | Linha: ' . __LINE__);
         
-        $credentials = $request->only('NOME_USUARIO', 'SENHA');
+        $credentials = $request->only('nome_usuario', 'password');
         
-        if (Auth::attempt($credentials)) {            
-            $request->session()->regenerate(); // Regenera a sessão para evitar ataques de fixaçãi de sessão.
-
+        if (Auth::attempt($credentials)) {
+            
+            $request->session()->regenerate();
             return redirect()->intended('/dashboard');
         }
 
