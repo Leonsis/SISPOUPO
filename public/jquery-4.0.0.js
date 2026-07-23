@@ -1,4 +1,4 @@
-$(document).ready(function () {/*!
+/*!
 	* jQuery JavaScript Library v4.0.0
 	* https://jquery.com/
 	*
@@ -9678,4 +9678,3 @@ $(document).ready(function () {/*!
 	return jQuery;
 
 	} );
-})
