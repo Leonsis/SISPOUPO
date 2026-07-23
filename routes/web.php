@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UsuariosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +27,5 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function() {        
     Route::post('/logout-action', [LoginController::class, 'logoutAction'])->name('logout');// action
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');// view
+    Route::get('/usuarios', [UsuariosController::class, 'usuarios'])->name('usuarios');// view
 });

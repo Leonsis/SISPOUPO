@@ -66,11 +66,12 @@ button:hover {
 }
 
 .login .btn-outline-warning {
-    color: #f5b645 !important;
+    color: #1a1a2e !important;
 }
 
 .login .btn-outline-warning:hover {
     background-color: rgba(245, 182, 69, 0.1) !important;
+    color: #f5b645 !important
 }
 
 /* Checkbox personalizado */
@@ -98,4 +99,358 @@ button:hover {
     .login .form-label {
         font-size: 0.9rem;
     }
+}
+
+/* Estilos do Dashboard */
+.dashboard {
+    background-color: #0d0d1a;
+    overflow-x: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #1a1a2e !important;
+}
+
+.sidebar .nav-link {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: all 0.3s ease;
+    color: #ccc;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(245, 182, 69, 0.1);
+    color: #f5b645 !important;
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(245, 182, 69, 0.15);
+    color: #f5b645 !important;
+    font-weight: 600;
+}
+
+.sidebar .nav-link i {
+    width: 20px;
+}
+
+.sidebar-header h2 {
+    font-size: 1.4rem;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+/* Conteúdo principal */
+#page-content-wrapper {
+    min-height: 100vh;
+    background-color: #0d0d1a;
+}
+
+/* Cards */
+.dashboard .card {
+    transition: all 0.3s ease;
+    background-color: #1a1a2e !important;
+    border: 1px solid #f5b645 !important;
+}
+
+.dashboard .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(245, 182, 69, 0.15);
+}
+
+.dashboard .card-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid #f5b645 !important;
+    padding: 15px 20px;
+}
+
+.dashboard .card-body {
+    padding: 20px;
+}
+
+/* Métricas cards */
+.dashboard .card .bg-warning.bg-opacity-25 {
+    background-color: rgba(245, 182, 69, 0.15) !important;
+}
+
+.dashboard .card h2 {
+    font-weight: 700;
+}
+
+/* Tabelas */
+.dashboard .table {
+    margin-bottom: 0;
+}
+
+.dashboard .table-dark {
+    --bs-table-bg: transparent;
+    --bs-table-hover-bg: rgba(245, 182, 69, 0.05);
+}
+
+.dashboard .table > :not(caption) > * > * {
+    padding: 12px 16px;
+    border-color: rgba(245, 182, 69, 0.1);
+}
+
+.dashboard .table thead th {
+    color: #f5b645;
+    font-weight: 600;
+    border-bottom: 2px solid #f5b645;
+}
+
+.dashboard .table tbody td {
+    color: #ccc;
+    vertical-align: middle;
+}
+
+/* Navbar superior */
+.dashboard .navbar {
+    background-color: #1a1a2e !important;
+}
+
+.dashboard .navbar .dropdown-menu {
+    background-color: #1a1a2e;
+    border: 1px solid #f5b645;
+}
+
+.dashboard .navbar .dropdown-item {
+    color: #ccc;
+}
+
+.dashboard .navbar .dropdown-item:hover {
+    background-color: rgba(245, 182, 69, 0.1);
+    color: #f5b645;
+}
+
+/* Badges */
+.dashboard .badge {
+    padding: 5px 10px;
+    font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        bottom: 0;
+        min-height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1050;
+        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    .sidebar-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+        display: none;
+    }
+
+    .sidebar.show + .sidebar-backdrop {
+        display: block;
+    }
+
+    #page-content-wrapper {
+        padding-top: 56px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .dashboard .container-fluid {
+        padding: 0.75rem !important;
+    }
+
+    .dashboard .card-body {
+        padding: 15px;
+    }
+
+    .dashboard .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    .dashboard .table > :not(caption) > * > * {
+        padding: 8px 10px;
+    }
+
+    .sidebar {
+        min-width: 280px;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .dashboard h2 {
+        font-size: 1.2rem;
+    }
+
+    .dashboard .card h2 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard .card h6 {
+        font-size: 0.8rem;
+    }
+
+    .dashboard .nav-link {
+        font-size: 0.9rem;
+        padding: 10px 14px;
+    }
+
+    .sidebar-header h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Scrollbar personalizada */
+.dashboard ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dashboard ::-webkit-scrollbar-track {
+    background: #1a1a2e;
+}
+
+.dashboard ::-webkit-scrollbar-thumb {
+    background: #f5b645;
+    border-radius: 4px;
+}
+
+.dashboard ::-webkit-scrollbar-thumb:hover {
+    background: #d4a037;
+}
+
+/* Estilos para a página de usuários */
+.users-page .modal-content {
+    background-color: #1a1a2e !important;
+    border: 1px solid #f5b645 !important;
+}
+
+.users-page .modal-header,
+.users-page .modal-footer {
+    border-color: #f5b645 !important;
+}
+
+.users-page .form-control:focus,
+.users-page .form-select:focus {
+    border-color: #f5b645 !important;
+    box-shadow: 0 0 0 0.2rem rgba(245, 182, 69, 0.25) !important;
+    background-color: #2a2a4e !important;
+}
+
+.users-page .form-control.is-invalid,
+.users-page .form-select.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.users-page .table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.users-page .table tbody tr:hover {
+    background-color: rgba(245, 182, 69, 0.05) !important;
+    transform: scale(1.01);
+}
+
+.users-page .pagination .page-link {
+    background-color: #1a1a2e !important;
+    border-color: #f5b645 !important;
+    color: #f5b645 !important;
+}
+
+.users-page .pagination .page-link:hover {
+    background-color: rgba(245, 182, 69, 0.1) !important;
+}
+
+.users-page .pagination .page-item.active .page-link {
+    background-color: #f5b645 !important;
+    color: #1a1a2e !important;
+}
+
+.users-page .toast {
+    background-color: #1a1a2e !important;
+    border: 1px solid #f5b645 !important;
+}
+
+.users-page .btn-outline-warning:hover {
+    background-color: rgba(245, 182, 69, 0.1) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(245, 182, 69, 0.2);
+}
+
+.users-page .btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.users-page .table tbody tr {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsivo para modais */
+@media (max-width: 576px) {
+    .users-page .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .users-page .modal-body {
+        padding: 1rem;
+    }
+    
+    .users-page .table-responsive {
+        font-size: 0.85rem;
+    }
+    
+    .users-page .table > :not(caption) > * > * {
+        padding: 8px 10px;
+    }
+}
+
+/* Scroll suave */
+.users-page .table-responsive {
+    scroll-behavior: smooth;
+}
+
+/* Badge de status animado */
+.users-page .badge {
+    transition: all 0.3s ease;
+}
+
+.users-page .badge:hover {
+    transform: scale(1.05);
 }

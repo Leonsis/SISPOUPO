@@ -31,15 +31,7 @@
                                 <button class="btn btn-outline-warning border-warning" type="button" id="togglePassword" aria-label="Mostrar/ocultar senha" >
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                            </div>
-                            <div id="senhaHelp" class="form-text small">Mínimo 6 caracteres</div>
-                        </div>
-
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="remember" name="remember" >
-                            <label class="form-check-label text-light" for="remember">
-                                Lembrar-me
-                            </label>
+                            </div>                            
                         </div>
 
                         <hr class="my-4 border-warning opacity-25">
@@ -57,55 +49,48 @@
                     </form>
                 </div>
             </div>
-        </main>
-
-        <!-- Bootstrap Icons (para os ícones) -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        </main>        
 
         <script>
             // Toggle password visibility
-            document.getElementById('togglePassword')?.addEventListener('click', function() {
-                const passwordInput = document.getElementById('SENHA');
-                const icon = this.querySelector('i');
+            $('#togglePassword').on('click', function() {
+                const passwordInput = $('#SENHA');
+                const icon = $(this).find('i');
                 
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    icon.classList.remove('bi-eye-fill');
-                    icon.classList.add('bi-eye-slash-fill');
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
                 } else {
-                    passwordInput.type = 'password';
-                    icon.classList.remove('bi-eye-slash-fill');
-                    icon.classList.add('bi-eye-fill');
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
                 }
             });
 
             // Validação básica do formulário
-            document.querySelector('form')?.addEventListener('submit', function(e) {
-                const usuario = document.getElementById('USUARIO');
-                const senha = document.getElementById('SENHA');
+            $('form').on('submit', function(e) {
+                const usuario = $('#USUARIO');
+                const senha = $('#SENHA');
                 
-                if (!usuario.value.trim()) {
+                if (!usuario.val().trim()) {
                     e.preventDefault();
-                    usuario.classList.add('is-invalid');
+                    usuario.addClass('is-invalid');
                     usuario.focus();
                     return false;
                 }
                 
-                if (!senha.value || senha.value.length < 6) {
+                if (!senha.val() || senha.val().length < 6) {
                     e.preventDefault();
-                    senha.classList.add('is-invalid');
+                    senha.addClass('is-invalid');
                     senha.focus();
                     return false;
                 }
                 
                 return true;
-            });
+            });            
 
             // Remove validação de erro ao digitar
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('input', function() {
-                    this.classList.remove('is-invalid');
-                });
+            $('input').on('input', function() {
+                $(this).removeClass('is-invalid');
             });
         </script>
     </body>
