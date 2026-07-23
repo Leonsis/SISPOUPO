@@ -1,9 +1,10 @@
+/* Estilos base existentes permanecem */
 body {    
     background-color: #1a1a2e;
     color: #ccc;
 }
 
-h1, h2, h3, h4, h5, h5 {
+h1, h2, h3, h4, h5, h6 {
     color: #f5b645;
 }
 
@@ -15,15 +16,17 @@ button {
     background-color: #f5b645 !important;
 }
 
-button:hover{
+button:hover {
     background-color: #1a1a2e !important;
     border: 1px solid #f5b645 !important;
-    color: #f5b645  !important;
+    color: #f5b645 !important;
 }
 
-.login div.rounded-5 {
-    border:1px solid #f5b645 !important;
+.login-card {
+    border: 1px solid #f5b645 !important;
     background-color: rgba(245, 182, 69, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .login h1 {
@@ -31,5 +34,68 @@ button:hover{
 }
 
 .login .form-text {
-    color: #ccc;
+    color: #ccc !important;
+}
+
+/* Melhorias nos inputs */
+.login .form-control:focus {
+    border-color: #f5b645 !important;
+    box-shadow: 0 0 0 0.2rem rgba(245, 182, 69, 0.25) !important;
+    background-color: #2a2a4e !important;
+}
+
+.login .form-control.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.login .input-group-text {
+    color: #f5b645 !important;
+}
+
+.login .btn-warning {
+    color: #1a1a2e !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.login .btn-warning:hover {
+    color: #f5b645 !important;
+    background-color: transparent !important;
+    transform: translateY(-2px);
+}
+
+.login .btn-outline-warning {
+    color: #f5b645 !important;
+}
+
+.login .btn-outline-warning:hover {
+    background-color: rgba(245, 182, 69, 0.1) !important;
+}
+
+/* Checkbox personalizado */
+.login .form-check-input:checked {
+    background-color: #f5b645 !important;
+    border-color: #f5b645 !important;
+}
+
+.login .form-check-input:focus {
+    border-color: #f5b645 !important;
+    box-shadow: 0 0 0 0.2rem rgba(245, 182, 69, 0.25) !important;
+}
+
+/* Responsividade adicional */
+@media (max-width: 576px) {
+    .login-card {
+        padding: 1.5rem !important;
+        margin: 1rem;
+    }
+    
+    .login h1 {
+        font-size: 1.8rem;
+    }
+    
+    .login .form-label {
+        font-size: 0.9rem;
+    }
 }
