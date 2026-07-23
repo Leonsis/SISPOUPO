@@ -34,8 +34,7 @@ class LoginController extends Controller
             return redirect()->intended('/dashboard');
         }
 
-        //return redirect()->route('login')->with('error', 'Usuario ou senha invalidas');
-        return redirect(url('/') . '/')->with('error', 'Usuario ou senha invalidas');
+        return back()->with('error', 'Usuario ou senha invalidas');
     }
 
 
@@ -49,6 +48,6 @@ class LoginController extends Controller
         $request->session()->invalidate(); // Invalida a sessão atual.
         $request->session()->regenerateToken(); //Regenera o token CSRF para evitar ataques de falsificação de solicitação entre sites (CSRF).]
         
-        return redirect('/login');
+        return redirect()->route('login')->with('success', 'Você foi deslogado com sucesso!');
     }
 }
