@@ -7,4 +7,6 @@
     <script src="{{ asset('bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('jquery-4.0.0.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <!-- Bootstrap Icons (para os ícones) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
