@@ -29,3 +29,9 @@ Route::middleware('auth')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');// view
     Route::get('/usuarios', [UsuariosController::class, 'usuarios'])->name('usuarios');// view
 });
+
+// Ex: Só pode acessar essa rota quem ESTÁ logado E é ADMIN
+/*Route::middleware(['auth', 'user.type:USUARIO_ADMIN'])->group(function() {        
+    Route::get('/usuarios', [UsuariosController::class, 'usuarios'])->name('usuarios');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+});*/
