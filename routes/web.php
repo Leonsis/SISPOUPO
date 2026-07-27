@@ -46,3 +46,9 @@ Route::middleware('auth')->group(function() {
     // Deletar cartão (DELETE)
     Route::delete('/cartoes/delete-action/{id}', [ConfigController::class, 'destroyAction'])->name('cartoes.destroy');
 });
+
+// Ex: Só pode acessar essa rota quem ESTÁ logado E é ADMIN
+/*Route::middleware(['auth', 'user.type:USUARIO_ADMIN'])->group(function() {        
+    Route::get('/usuarios', [UsuariosController::class, 'usuarios'])->name('usuarios');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+});*/
