@@ -25,7 +25,7 @@ class UsuariosController extends Controller
     }
 
 
-      public function storeAction(Request $request)
+    public function storeAction(Request $request)
     {
         // Remove formatação do CPF/CNPJ
         $cpf_cnpj = preg_replace('/[^0-9]/', '', $request->cpf_cnpj);

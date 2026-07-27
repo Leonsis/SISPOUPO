@@ -8,17 +8,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 
-class DashboardController extends Controller
+class DespesasController extends Controller
 {
 
     // Function para visualizar a pagina
-    public function dashboard()
+    public function despesas()
     {        
         // Cada usuário vê seus próprios dados
         $usuario = Auth::user();
         
         // Testes
-        //dd('Está no DashboardController | Linha: ' . __LINE__);
-        return view('dashboard');
+        //dd('Está no DespesasController | Linha: ' . __LINE__);
+        return view('despesas');
     }
 }

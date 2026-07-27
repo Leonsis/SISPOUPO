@@ -21,9 +21,9 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-light" href="#">
-                <i class="bi bi-box-seam-fill me-2"></i>
-                Produtos
+            <a class="nav-link {{ request()->routeIs('despesas') ? 'active text-light' : '' }} " href="{{ route('despesas') }}">                
+                <i class="bi bi-wallet2 me-2"></i>
+                Despesas
             </a>
         </li>
         <li class="nav-item">
@@ -39,7 +39,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-light" href="#">
+            <a class="nav-link {{ request()->routeIs('config') ? 'active text-light' : '' }} " href="{{ route('config') }}">
                 <i class="bi bi-gear-fill me-2"></i>
                 Configurações
             </a>
