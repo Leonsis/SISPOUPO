@@ -386,7 +386,7 @@
                 // MÁSCARA CPF/CNPJ - Modal Cadastro
                 // ============================================
                 $('#cpf_cnpj, #editCpfCnpj').on('input', function() {
-                    let valor = $(this).val().replace(/\D/g, '');
+                    let valor = $(this).val().replace(/[^a-zA-Z0-9]/g, '');
                     
                     // Limita a 14 dígitos
                     if (valor.length > 14) {
@@ -481,7 +481,7 @@
                     }
                     
                     // 4. CPF/CNPJ
-                    const cpfCnpj = $('#cpf_cnpj').val().replace(/\D/g, '');
+                    const cpfCnpj = $('#cpf_cnpj').val().replace(/[^a-zA-Z0-9]/g, '');
                     if (cpfCnpj === '') {
                         isValid = false;
                         $('#cpf_cnpj').addClass('is-invalid');
@@ -601,7 +601,7 @@
                     });
                     
                     // CPF/CNPJ
-                    const cpfCnpj = $('#editCpfCnpj').val().replace(/\D/g, '');
+                    const cpfCnpj = $('#editCpfCnpj').val().replace(/[^a-zA-Z0-9]/g, '');
                     if (cpfCnpj.length !== 11 && cpfCnpj.length !== 14) {
                         isValid = false;
                         $('#editCpfCnpj').addClass('is-invalid');
@@ -703,7 +703,7 @@
                     console.log('📝 Editando usuário:', { id, nomeUsuario, nome, email, cpfCnpj, telefone });
                     
                     // Define a action do formulário
-                    $('#editForm').attr('action', '/update-action/' + id);
+                    $('#editForm').attr('action', '/cartoes/update-action/' + id);
                     
                     // Preenche os campos básicos
                     $('#editUserId').val(id);

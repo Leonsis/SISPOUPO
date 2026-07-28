@@ -28,7 +28,7 @@ class UsuariosController extends Controller
     public function storeAction(Request $request)
     {
         // Remove formatação do CPF/CNPJ
-        $cpf_cnpj = preg_replace('/[^0-9]/', '', $request->cpf_cnpj);
+        $cpf_cnpj = preg_replace('/[^a-zA-Z0-9]/', '', $request->cpf_cnpj);
         $tamanho = strlen($cpf_cnpj);
 
         // Valida o tamanho
@@ -71,7 +71,7 @@ class UsuariosController extends Controller
             'cpf_cnpj'     => 'required|string',
             'telefone'     => 'required|string|max:20',
             'email'        => 'required|email|max:100',
-            'password'     => 'required|string|min:6|confirmed',
+            'password'     => 'required|string',
             'situacao_cadastral' => 'required|integer|in:0,1',
         ]);
 
