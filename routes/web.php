@@ -29,21 +29,17 @@ use App\Http\Controllers\ConfigController;
 Route::middleware('auth')->group(function() {            
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');// view
     Route::get('/despesas', [DespesasController::class, 'despesas'])->name('despesas');// view
-    Route::get('/usuarios', [UsuariosController::class, 'usuarios'])->name('usuarios');// view
-    Route::get('/config', [ConfigController::class, 'config'])->name('config');// view
+
+    Route::get('/usuarios', [UsuariosController::class, 'usuarios'])->name('usuarios');// view    
     Route::post('/store-action', [UsuariosController::class, 'storeAction'])->name('usuarios.store');// action
     Route::put('/update-action/{id}', [UsuariosController::class, 'updateAction'])->name('usuarios.update');// action
     Route::delete('/delete-action/{id}', [UsuariosController::class, 'destroyAction'])->name('usuarios.destroy');// action
+    
     Route::post('/logout-action', [LoginController::class, 'logoutAction'])->name('logout');// action
 
-
-
-    // TESTAR ROTAS
-    // Criar cartão (POST)
-    Route::post('/cartoes/store-action', [ConfigController::class, 'storeAction'])->name('cartoes.store');    
-    // Atualizar cartão (PUT)
-    Route::put('/cartoes/update-action/{id}', [ConfigController::class, 'updateAction'])->name('cartoes.update');    
-    // Deletar cartão (DELETE)
+    Route::get('/config', [ConfigController::class, 'config'])->name('config');// view
+    Route::post('/cartoes/store-action', [ConfigController::class, 'storeAction'])->name('cartoes.store');// action
+    Route::put('/cartoes/update-action/{id}', [ConfigController::class, 'updateAction'])->name('cartoes.update');        
     Route::delete('/cartoes/delete-action/{id}', [ConfigController::class, 'destroyAction'])->name('cartoes.destroy');
 });
 
