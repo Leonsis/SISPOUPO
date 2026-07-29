@@ -244,6 +244,40 @@
                 document.getElementById('sidebar').classList.toggle('show');
             });
 
+            @php
+                use App\Models\Style;
+                use Illuminate\Support\Facades\Auth;
+                
+                $style = Style::where('user_id', Auth::id())->first();
+                
+                // Cor primária do usuário
+                $corPrimaria = $style->cor_primaria ?? '#f5b645';
+                
+                // Gera uma paleta de cores baseada na cor primária
+                function gerarPaleta($corBase, $quantidade = 5) {
+                    $paleta = [];
+                    
+                    // Converte hex para RGB
+                    $rgb = sscanf($corBase, "#%02x%02x%02x");
+                    $r = $rgb[0];
+                    $g = $rgb[1];
+                    $b = $rgb[2];
+                    
+                    // Gera variações da cor base
+                    for ($i = 0; $i < $quantidade; $i++) {
+                        $fator = 1 - ($i * 0.15); // Diminui 15% a cada iteração
+                        $novoR = max(0, min(255, round($r * $fator)));
+                        $novoG = max(0, min(255, round($g * $fator)));
+                        $novoB = max(0, min(255, round($b * $fator)));
+                        
+                        $paleta[] = sprintf("#%02x%02x%02x", $novoR, $novoG, $novoB);
+                    }
+                    
+                    return $paleta;
+                }
+                
+                $coresPaleta = gerarPaleta($corPrimaria, 5);
+            @endphp
             // Gráfico de barras - Vendas mensais
             const ctx = document.getElementById('salesChart')?.getContext('2d');
             if (ctx) {
@@ -254,8 +288,8 @@
                         datasets: [{
                             label: 'Vendas (R$)',
                             data: [28.5, 32.1, 29.8, 41.2, 38.7, 45.3, 42.5],
-                            backgroundColor: 'rgba(245, 182, 69, 0.7)',
-                            borderColor: '#f5b645',
+                            backgroundColor: '{{ $style->cor_primaria ?? '#f5b645' }}',
+                            borderColor: '{{ $style->cor_primaria ?? '#f5b645' }}',
                             borderWidth: 2,
                             borderRadius: 5
                         }]
@@ -266,25 +300,25 @@
                         plugins: {
                             legend: {
                                 labels: {
-                                    color: '#ccc'
+                                    color: '{{ $style->cor_texto ?? '#cccccc' }}'
                                 }
                             }
                         },
                         scales: {
                             y: {
                                 ticks: {
-                                    color: '#ccc',
+                                    color: '{{ $style->cor_texto ?? '#cccccc' }}',
                                     callback: function(value) {
                                         return 'R$ ' + value + 'k';
                                     }
                                 },
                                 grid: {
-                                    color: 'rgba(255, 255, 255, 0.05)'
+                                    color: '#ffffff0d'
                                 }
                             },
                             x: {
                                 ticks: {
-                                    color: '#ccc'
+                                    color: '{{ $style->cor_texto ?? '#cccccc' }}'
                                 },
                                 grid: {
                                     color: 'rgba(255, 255, 255, 0.05)'
@@ -294,7 +328,7 @@
                     }
                 });
             }
-
+            
             // Gráfico de pizza - Categorias
             const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
             if (ctx2) {
@@ -305,11 +339,11 @@
                         datasets: [{
                             data: [35, 25, 20, 12, 8],
                             backgroundColor: [
-                                '#f5b645',
-                                '#d4a037',
-                                '#b38c28',
-                                '#92781f',
-                                '#716416'
+                                '{{ $coresPaleta[0] ?? '#f5b645' }}',
+                                '{{ $coresPaleta[1] ?? '#d4a037' }}',
+                                '{{ $coresPaleta[2] ?? '#b38c28' }}',
+                                '{{ $coresPaleta[3] ?? '#92781f' }}',
+                                '{{ $coresPaleta[4] ?? '#716416' }}'
                             ],
                             borderColor: '#1a1a2e',
                             borderWidth: 2
@@ -322,7 +356,7 @@
                             legend: {
                                 position: 'bottom',
                                 labels: {
-                                    color: '#ccc',
+                                    color: '{{ $style->cor_texto ?? '#cccccc' }}',
                                     padding: 15
                                 }
                             }
