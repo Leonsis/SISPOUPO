@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\CartaoCredito;
+use App\Models\Style;
 
 
 class ConfigController extends Controller
@@ -25,7 +26,6 @@ class ConfigController extends Controller
         $totalLimite = CartaoCredito::sum('limite_credito');
         return view('config', compact('cartoes', 'nTotalCartoes', 'totalLimite'));
     }
-
 
     public function storeAction(Request $request)
     {
@@ -108,6 +108,60 @@ class ConfigController extends Controller
                 'success' => false,
                 'message' => 'Erro ao excluir cartão: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function storeStyleAction(Request $request)
+    {
+        try {
+            // Verifica se o usuário está logado
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'Você precisa estar logado.');
+            }
+
+            // ✅ USA OS NOMES CORRETOS (como estão chegando)
+            $data = $request->validate([
+                'primaryColorHex' => 'required|string|max:50',
+                'secondaryColorHex' => 'required|string|max:50',
+                'backgroundColorHex' => 'required|string|max:50',
+                'textColorHex' => 'required|string|max:50',
+            ], [
+                'primaryColorHex.required' => 'A cor primária é obrigatória.',
+                'secondaryColorHex.required' => 'A cor secundária é obrigatória.',
+                'backgroundColorHex.required' => 'A cor de fundo é obrigatória.',
+                'textColorHex.required' => 'A cor do texto é obrigatória.',
+            ]);
+
+            // Adiciona o user_id
+            $data['user_id'] = Auth::id();
+
+            // Mapeia os nomes para o banco de dados (se necessário)
+            $styleData = [
+                'user_id' => $data['user_id'],
+                'cor_primaria' => $data['primaryColorHex'],
+                'cor_secundario' => $data['secondaryColorHex'],
+                'cor_fundo' => $data['backgroundColorHex'],
+                'cor_texto' => $data['textColorHex'],
+            ];
+
+            // Verifica se já existe um estilo para este usuário
+            $existingStyle = Style::where('user_id', Auth::id())->first();
+            
+            if ($existingStyle) {
+                $existingStyle->update($styleData);
+                $message = 'Estilo atualizado com sucesso!';
+            } else {
+                Style::create($styleData);
+                $message = 'Estilo salvo com sucesso!';
+            }
+
+            return redirect()->route('config')->with('success', $message);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+            
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Erro ao salvar estilo: ' . $e->getMessage()])->withInput();
         }
     }
 }

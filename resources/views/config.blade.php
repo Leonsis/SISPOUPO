@@ -106,17 +106,17 @@
                                     </h5>
                                 </div>
                                 <div class="card-body">
-                                    <form id="colorForm">
+                                    <form action="{{ route('style.store') }}" method="POST">
+                                        @csrf
+
                                         <div class="mb-3">
                                             <label for="primaryColor" class="form-label fw-semibold">
                                                 Cor Primária
                                                 <small class="text-secondary d-block">Usada em títulos e destaques principais</small>
                                             </label>
                                             <div class="d-flex align-items-center gap-3">
-                                                <input type="color" class="form-control form-control-color bg-dark border-warning" 
-                                                       id="primaryColor" value="#f5b645" style="width: 60px; height: 50px; padding: 5px;">
-                                                <input type="text" class="form-control bg-dark text-light border-warning" 
-                                                       id="primaryColorHex" value="#f5b645" style="max-width: 150px;">
+                                                <input type="color" class="form-control form-control-color bg-dark border-warning" id="primaryColor" value="#f5b645" style="width: 60px; height: 50px; padding: 5px;">
+                                                <input name="primaryColorHex" type="text" class="form-control bg-dark text-light border-warning" id="primaryColorHex" value="#f5b645" style="max-width: 150px;">
                                             </div>
                                         </div>
 
@@ -126,10 +126,8 @@
                                                 <small class="text-secondary d-block">Usada em botões e elementos interativos</small>
                                             </label>
                                             <div class="d-flex align-items-center gap-3">
-                                                <input type="color" class="form-control form-control-color bg-dark border-warning" 
-                                                       id="secondaryColor" value="#1a1a2e" style="width: 60px; height: 50px; padding: 5px;">
-                                                <input type="text" class="form-control bg-dark text-light border-warning" 
-                                                       id="secondaryColorHex" value="#1a1a2e" style="max-width: 150px;">
+                                                <input type="color" class="form-control form-control-color bg-dark border-warning" id="secondaryColor" value="#1a1a2e" style="width: 60px; height: 50px; padding: 5px;">
+                                                <input name="secondaryColorHex" type="text" class="form-control bg-dark text-light border-warning" id="secondaryColorHex" value="#1a1a2e" style="max-width: 150px;">
                                             </div>
                                         </div>
 
@@ -139,10 +137,8 @@
                                                 <small class="text-secondary d-block">Cor de fundo principal do sistema</small>
                                             </label>
                                             <div class="d-flex align-items-center gap-3">
-                                                <input type="color" class="form-control form-control-color bg-dark border-warning" 
-                                                       id="backgroundColor" value="#0d0d1a" style="width: 60px; height: 50px; padding: 5px;">
-                                                <input type="text" class="form-control bg-dark text-light border-warning" 
-                                                       id="backgroundColorHex" value="#0d0d1a" style="max-width: 150px;">
+                                                <input type="color" class="form-control form-control-color bg-dark border-warning" id="backgroundColor" value="#0d0d1a" style="width: 60px; height: 50px; padding: 5px;">
+                                                <input name="backgroundColorHex" type="text" class="form-control bg-dark text-light border-warning" id="backgroundColorHex" value="#0d0d1a" style="max-width: 150px;">
                                             </div>
                                         </div>
 
@@ -152,10 +148,8 @@
                                                 <small class="text-secondary d-block">Cor padrão para textos</small>
                                             </label>
                                             <div class="d-flex align-items-center gap-3">
-                                                <input type="color" class="form-control form-control-color bg-dark border-warning" 
-                                                       id="textColor" value="#cccccc" style="width: 60px; height: 50px; padding: 5px;">
-                                                <input type="text" class="form-control bg-dark text-light border-warning" 
-                                                       id="textColorHex" value="#cccccc" style="max-width: 150px;">
+                                                <input type="color" class="form-control form-control-color bg-dark border-warning" id="textColor" value="#cccccc" style="width: 60px; height: 50px; padding: 5px;">
+                                                <input name="textColorHex" type="text" class="form-control bg-dark text-light border-warning" id="textColorHex" value="#cccccc" style="max-width: 150px;">
                                             </div>
                                         </div>
 
@@ -166,7 +160,7 @@
                                                     Exemplo de como as cores ficarão no sistema.
                                                     <span class="text-warning">Destaque em amarelo</span>
                                                 </p>
-                                                <button class="btn btn-warning btn-sm">Botão Exemplo</button>
+                                                <button class="btn btn-warning btn-sm" disabled>Botão Exemplo</button>
                                             </div>
                                         </div>
 
@@ -333,86 +327,7 @@
                     </div>
                 </div>
             </div>
-        </div>  
-
-        <style>
-            /* Estilos para a página de configurações */
-            .config-page .form-control-color {
-                cursor: pointer;
-                padding: 5px !important;
-            }
-
-            .config-page .form-control-color::-webkit-color-swatch-wrapper {
-                padding: 0;
-            }
-
-            .config-page .form-control-color::-webkit-color-swatch {
-                border: 2px solid #f5b645;
-                border-radius: 5px;
-            }
-
-            .config-page .form-control-color::-moz-color-swatch {
-                border: 2px solid #f5b645;
-                border-radius: 5px;
-            }
-
-            .config-page #previewBox {
-                transition: all 0.3s ease;
-                background-color: #0d0d1a !important;
-                border: 2px solid #f5b645 !important;
-            }
-
-            .config-page #previewBox .text-warning {
-                color: #f5b645 !important;
-            }
-
-            .config-page #previewBox .text-light {
-                color: #cccccc !important;
-            }
-
-            .config-page .card {
-                transition: all 0.3s ease;
-            }
-
-            .config-page .card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 25px rgba(245, 182, 69, 0.15);
-            }
-
-            .config-page .table tbody tr {
-                transition: all 0.2s ease;
-            }
-
-            .config-page .table tbody tr:hover {
-                background-color: rgba(245, 182, 69, 0.05) !important;
-            }
-
-            .config-page .btn-outline-warning:hover {
-                background-color: rgba(245, 182, 69, 0.1) !important;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(245, 182, 69, 0.2);
-            }
-
-            .config-page .btn-outline-danger:hover {
-                background-color: rgba(220, 53, 69, 0.1) !important;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
-            }
-
-            @media (max-width: 576px) {
-                .config-page .modal-dialog {
-                    margin: 0.5rem;
-                }
-                
-                .config-page .modal-body {
-                    padding: 1rem;
-                }
-                
-                .config-page .table-responsive {
-                    font-size: 0.85rem;
-                }
-            }
-        </style>
+        </div>         
 
         <script>                                        
             $(document).ready(function() {
@@ -543,34 +458,114 @@
                     });
                 });
 
-            });
 
-            // ============================================
-            // TOAST PERSONALIZADO
-            // ============================================
-            function showToast(message, type = 'success') {
-                const toast = document.createElement('div');
-                toast.className = `toast align-items-center text-white bg-${type} border-0 position-fixed top-0 end-0 m-3`;
-                toast.style.zIndex = '9999';
-                toast.style.minWidth = '250px';
-                toast.innerHTML = `
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="bi bi-${type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2"></i>
-                            ${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                `;
-                document.body.appendChild(toast);
-                
-                const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
-                bsToast.show();
-                
-                toast.addEventListener('hidden.bs.toast', function() {
-                    this.remove();
+                // ============== PERSONALIZAÇÃO DE CORES ==============
+
+                // Sincronizar inputs de cor
+                document.getElementById('primaryColor').addEventListener('input', function() {
+                    document.getElementById('primaryColorHex').value = this.value;
+                    applyColorPreview();
                 });
-            }
+
+                document.getElementById('primaryColorHex').addEventListener('input', function() {
+                    if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                        document.getElementById('primaryColor').value = this.value;
+                        applyColorPreview();
+                    }
+                });
+
+                document.getElementById('secondaryColor').addEventListener('input', function() {
+                    document.getElementById('secondaryColorHex').value = this.value;
+                    applyColorPreview();
+                });
+
+                document.getElementById('secondaryColorHex').addEventListener('input', function() {
+                    if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                        document.getElementById('secondaryColor').value = this.value;
+                        applyColorPreview();
+                    }
+                });
+
+                document.getElementById('backgroundColor').addEventListener('input', function() {
+                    document.getElementById('backgroundColorHex').value = this.value;
+                    applyColorPreview();
+                });
+
+                document.getElementById('backgroundColorHex').addEventListener('input', function() {
+                    if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                        document.getElementById('backgroundColor').value = this.value;
+                        applyColorPreview();
+                    }
+                });
+
+                document.getElementById('textColor').addEventListener('input', function() {
+                    document.getElementById('textColorHex').value = this.value;
+                    applyColorPreview();
+                });
+
+                document.getElementById('textColorHex').addEventListener('input', function() {
+                    if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                        document.getElementById('textColor').value = this.value;
+                        applyColorPreview();
+                    }
+                });
+
+                // Aplicar preview das cores
+                function applyColorPreview() {
+                    const primary = document.getElementById('primaryColor').value;
+                    const secondary = document.getElementById('secondaryColor').value;
+                    const background = document.getElementById('backgroundColor').value;
+                    const text = document.getElementById('textColor').value;
+
+                    const preview = document.getElementById('previewBox');
+                    preview.style.backgroundColor = background;
+                    preview.style.borderColor = primary;
+                    
+                    const title = preview.querySelector('h6');
+                    if (title) title.style.color = primary;
+                    
+                    const paragraph = preview.querySelector('p');
+                    if (paragraph) {
+                        paragraph.style.color = text;
+                        const highlight = paragraph.querySelector('.text-warning');
+                        if (highlight) highlight.style.color = primary;
+                    }
+                    
+                    const button = preview.querySelector('.btn');
+                    if (button) {
+                        button.style.backgroundColor = primary;
+                        button.style.color = secondary;
+                        button.style.borderColor = primary;
+                    }
+                }
+
+                // ============================================
+                // TOAST PERSONALIZADO
+                // ============================================
+                function showToast(message, type = 'success') {
+                    const toast = document.createElement('div');
+                    toast.className = `toast align-items-center text-white bg-${type} border-0 position-fixed top-0 end-0 m-3`;
+                    toast.style.zIndex = '9999';
+                    toast.style.minWidth = '250px';
+                    toast.innerHTML = `
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="bi bi-${type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2"></i>
+                                ${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    `;
+                    document.body.appendChild(toast);
+                    
+                    const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
+                    bsToast.show();
+                    
+                    toast.addEventListener('hidden.bs.toast', function() {
+                        this.remove();
+                    });
+                }
+            });            
         </script>
 
         {{-- @if ($errors->any())

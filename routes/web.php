@@ -39,8 +39,9 @@ Route::middleware('auth')->group(function() {
 
     Route::get('/config', [ConfigController::class, 'config'])->name('config');// view
     Route::post('/cartoes/store-action', [ConfigController::class, 'storeAction'])->name('cartoes.store');// action
-    Route::put('/cartoes/update-action/{id}', [ConfigController::class, 'updateAction'])->name('cartoes.update');        
-    Route::delete('/cartoes/delete-action/{id}', [ConfigController::class, 'destroyAction'])->name('cartoes.destroy');
+    Route::put('/cartoes/update-action/{id}', [ConfigController::class, 'updateAction'])->name('cartoes.update');// action
+    Route::delete('/cartoes/delete-action/{id}', [ConfigController::class, 'destroyAction'])->name('cartoes.destroy');// action
+    Route::post('/style/store-action/', [ConfigController::class, 'storeStyleAction'])->name('style.store');// action
 });
 
 // Ex: Só pode acessar essa rota quem ESTÁ logado E é ADMIN

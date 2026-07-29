@@ -1,29 +1,29 @@
 /* Estilos base existentes permanecem */
 body {    
-    background-color: #1a1a2e;
-    color: #ccc;
+    background-color: var(--var-cor-secundaria);
+    color: var(--var-cor-texto);
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #f5b645;
+    color: var(--var-cor-primaria);
 }
 
 p {
-    color: #ccc;
+    color: var(--var-cor-texto);
 }
 
 button {
-    background-color: #f5b645 !important;
+    background-color: var(--var-cor-primaria) !important;
 }
 
 button:hover {
-    background-color: #1a1a2e !important;
-    border: 1px solid #f5b645 !important;
-    color: #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border: 1px solid var(--var-cor-primaria) !important;
+    color: var(--var-cor-primaria) !important;
 }
 
 .login-card {
-    border: 1px solid #f5b645 !important;
+    border: 1px solid var(--var-cor-primaria) !important;
     background-color: rgba(245, 182, 69, 0.1);
     backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -34,12 +34,12 @@ button:hover {
 }
 
 .login .form-text {
-    color: #ccc !important;
+    color: var(--var-cor-texto) !important;
 }
 
 /* Melhorias nos inputs */
 .login .form-control:focus {
-    border-color: #f5b645 !important;
+    border-color: var(--var-cor-primaria) !important;
     box-shadow: 0 0 0 0.2rem rgba(245, 182, 69, 0.25) !important;
     background-color: #2a2a4e !important;
 }
@@ -50,38 +50,38 @@ button:hover {
 }
 
 .login .input-group-text {
-    color: #f5b645 !important;
+    color: var(--var-cor-primaria) !important;
 }
 
 .login .btn-warning {
-    color: #1a1a2e !important;
+    color: var(--var-cor-secundaria) !important;
     font-weight: 600;
     transition: all 0.3s ease;
 }
 
 .login .btn-warning:hover {
-    color: #f5b645 !important;
+    color: var(--var-cor-primaria) !important;
     background-color: transparent !important;
     transform: translateY(-2px);
 }
 
 .login .btn-outline-warning {
-    color: #1a1a2e !important;
+    color: var(--var-cor-secundaria) !important;
 }
 
 .login .btn-outline-warning:hover {
     background-color: rgba(245, 182, 69, 0.1) !important;
-    color: #f5b645 !important
+    color: var(--var-cor-primaria) !important
 }
 
 /* Checkbox personalizado */
 .login .form-check-input:checked {
-    background-color: #f5b645 !important;
-    border-color: #f5b645 !important;
+    background-color: var(--var-cor-primaria) !important;
+    border-color: var(--var-cor-primaria) !important;
 }
 
 .login .form-check-input:focus {
-    border-color: #f5b645 !important;
+    border-color: var(--var-cor-primaria) !important;
     box-shadow: 0 0 0 0.2rem rgba(245, 182, 69, 0.25) !important;
 }
 
@@ -103,7 +103,7 @@ button:hover {
 
 /* Estilos do Dashboard */
 .dashboard {
-    background-color: #0d0d1a;
+    background-color: var(--var-cor-fundo);
     overflow-x: hidden;
 }
 
@@ -116,7 +116,7 @@ button:hover {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background-color: #1a1a2e !important;
+    background-color: var(--var-cor-secundaria) !important;
 }
 
 .sidebar .nav-link {
@@ -124,18 +124,18 @@ button:hover {
     border-radius: 8px;
     margin-bottom: 4px;
     transition: all 0.3s ease;
-    color: #ccc;
+    color: var(--var-cor-texto);
 }
 
 .sidebar .nav-link:hover {
     background-color: rgba(245, 182, 69, 0.1);
-    color: #f5b645 !important;
+    color: var(--var-cor-primaria) !important;
     transform: translateX(5px);
 }
 
 .sidebar .nav-link.active {
     background-color: rgba(245, 182, 69, 0.15);
-    color: #f5b645 !important;
+    color: var(--var-cor-primaria) !important;
     font-weight: 600;
 }
 
@@ -154,14 +154,14 @@ button:hover {
 /* Conteúdo principal */
 #page-content-wrapper {
     min-height: 100vh;
-    background-color: #0d0d1a;
+    background-color: var(--var-cor-fundo);
 }
 
 /* Cards */
 .dashboard .card {
     transition: all 0.3s ease;
-    background-color: #1a1a2e !important;
-    border: 1px solid #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border: 1px solid var(--var-cor-primaria) !important;
 }
 
 .dashboard .card:hover {
@@ -171,7 +171,7 @@ button:hover {
 
 .dashboard .card-header {
     background-color: transparent !important;
-    border-bottom: 1px solid #f5b645 !important;
+    border-bottom: 1px solid var(--var-cor-primaria) !important;
     padding: 15px 20px;
 }
 
@@ -204,33 +204,33 @@ button:hover {
 }
 
 .dashboard .table thead th {
-    color: #f5b645;
+    color: var(--var-cor-primaria);
     font-weight: 600;
-    border-bottom: 2px solid #f5b645;
+    border-bottom: 2px solid var(--var-cor-primaria);
 }
 
 .dashboard .table tbody td {
-    color: #ccc;
+    color: var(--var-cor-texto);
     vertical-align: middle;
 }
 
 /* Navbar superior */
 .dashboard .navbar {
-    background-color: #1a1a2e !important;
+    background-color: var(--var-cor-secundaria) !important;
 }
 
 .dashboard .navbar .dropdown-menu {
-    background-color: #1a1a2e;
-    border: 1px solid #f5b645;
+    background-color: var(--var-cor-secundaria);
+    border: 1px solid var(--var-cor-primaria);
 }
 
 .dashboard .navbar .dropdown-item {
-    color: #ccc;
+    color: var(--var-cor-texto);
 }
 
 .dashboard .navbar .dropdown-item:hover {
     background-color: rgba(245, 182, 69, 0.1);
-    color: #f5b645;
+    color: var(--var-cor-primaria);
 }
 
 /* Badges */
@@ -329,11 +329,11 @@ button:hover {
 }
 
 .dashboard ::-webkit-scrollbar-track {
-    background: #1a1a2e;
+    background: var(--var-cor-secundaria);
 }
 
 .dashboard ::-webkit-scrollbar-thumb {
-    background: #f5b645;
+    background: var(--var-cor-primaria);
     border-radius: 4px;
 }
 
@@ -343,18 +343,18 @@ button:hover {
 
 /* Estilos para a página de usuários */
 .users-page .modal-content {
-    background-color: #1a1a2e !important;
-    border: 1px solid #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border: 1px solid var(--var-cor-primaria) !important;
 }
 
 .users-page .modal-header,
 .users-page .modal-footer {
-    border-color: #f5b645 !important;
+    border-color: var(--var-cor-primaria) !important;
 }
 
 .users-page .form-control:focus,
 .users-page .form-select:focus {
-    border-color: #f5b645 !important;
+    border-color: var(--var-cor-primaria) !important;
     box-shadow: 0 0 0 0.2rem rgba(245, 182, 69, 0.25) !important;
     background-color: #2a2a4e !important;
 }
@@ -375,9 +375,9 @@ button:hover {
 }
 
 .users-page .pagination .page-link {
-    background-color: #1a1a2e !important;
-    border-color: #f5b645 !important;
-    color: #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border-color: var(--var-cor-primaria) !important;
+    color: var(--var-cor-primaria) !important;
 }
 
 .users-page .pagination .page-link:hover {
@@ -385,13 +385,13 @@ button:hover {
 }
 
 .users-page .pagination .page-item.active .page-link {
-    background-color: #f5b645 !important;
-    color: #1a1a2e !important;
+    background-color: var(--var-cor-primaria) !important;
+    color: var(--var-cor-secundaria) !important;
 }
 
 .users-page .toast {
-    background-color: #1a1a2e !important;
-    border: 1px solid #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border: 1px solid var(--var-cor-primaria) !important;
 }
 
 .users-page .btn-outline-warning:hover {
@@ -466,18 +466,18 @@ button:hover {
 }
 
 .expense-page .modal-content {
-    background-color: #1a1a2e !important;
-    border: 1px solid #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border: 1px solid var(--var-cor-primaria) !important;
 }
 
 .expense-page .modal-header,
 .expense-page .modal-footer {
-    border-color: #f5b645 !important;
+    border-color: var(--var-cor-primaria) !important;
 }
 
 .expense-page .form-control:focus,
 .expense-page .form-select:focus {
-    border-color: #f5b645 !important;
+    border-color: var(--var-cor-primaria) !important;
     box-shadow: 0 0 0 0.2rem rgba(245, 182, 69, 0.25) !important;
     background-color: #2a2a4e !important;
 }
@@ -533,33 +533,33 @@ button:hover {
 
 /* Tooltip personalizado */
 .expense-page .tooltip-inner {
-    background-color: #1a1a2e !important;
-    border: 1px solid #f5b645 !important;
-    color: #ccc !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border: 1px solid var(--var-cor-primaria) !important;
+    color: var(--var-cor-texto) !important;
     max-width: 300px !important;
     padding: 15px !important;
 }
 
 .expense-page .tooltip.bs-tooltip-top .tooltip-arrow::before {
-    border-top-color: #f5b645 !important;
+    border-top-color: var(--var-cor-primaria) !important;
 }
 
 .expense-page .tooltip.bs-tooltip-bottom .tooltip-arrow::before {
-    border-bottom-color: #f5b645 !important;
+    border-bottom-color: var(--var-cor-primaria) !important;
 }
 
 .expense-page .tooltip.bs-tooltip-start .tooltip-arrow::before {
-    border-left-color: #f5b645 !important;
+    border-left-color: var(--var-cor-primaria) !important;
 }
 
 .expense-page .tooltip.bs-tooltip-end .tooltip-arrow::before {
-    border-right-color: #f5b645 !important;
+    border-right-color: var(--var-cor-primaria) !important;
 }
 
 /* Info toast */
 .expense-page .toast {
-    background-color: #1a1a2e !important;
-    border: 1px solid #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    border: 1px solid var(--var-cor-primaria) !important;
 }
 
 /* Responsivo para modais */
@@ -606,17 +606,94 @@ button:hover {
 
 /* Categorias no select */
 .expense-page optgroup {
-    background-color: #1a1a2e !important;
-    color: #f5b645 !important;
+    background-color: var(--var-cor-secundaria) !important;
+    color: var(--var-cor-primaria) !important;
     font-weight: 600 !important;
 }
 
 .expense-page option {
-    background-color: #1a1a2e !important;
-    color: #ccc !important;
+    background-color: var(--var-cor-secundaria) !important;
+    color: var(--var-cor-texto) !important;
     padding: 5px !important;
 }
 
 .expense-page option:hover {
     background-color: rgba(245, 182, 69, 0.1) !important;
+}
+
+/* Estilos para a página de configurações */
+.config-page .form-control-color {
+    cursor: pointer;
+    padding: 5px !important;
+}
+
+.config-page .form-control-color::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.config-page .form-control-color::-webkit-color-swatch {
+    border: 2px solid var(--var-cor-primaria-rgb);
+    border-radius: 5px;
+}
+
+.config-page .form-control-color::-moz-color-swatch {
+    border: 2px solid var(--var-cor-primaria-rgb);
+    border-radius: 5px;
+}
+
+.config-page #previewBox {
+    transition: all 0.3s ease;
+    background-color: var(--var-cor-funco) !important;
+    border: 2px solid var(--var-cor-primaria-rgb) !important;
+}
+
+.config-page #previewBox .text-warning {
+    color: var(--var-cor-primaria-rgb) !important;
+}
+
+.config-page #previewBox .text-light {
+    color: var(--var-cor-texto) !important;
+}
+
+.config-page .card {
+    transition: all 0.3s ease;
+}
+
+.config-page .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(245, 182, 69, 0.15);
+}
+
+.config-page .table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.config-page .table tbody tr:hover {
+    background-color: rgba(245, 182, 69, 0.05) !important;
+}
+
+.config-page .btn-outline-warning:hover {
+    background-color: rgba(245, 182, 69, 0.1) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(245, 182, 69, 0.2);
+}
+
+.config-page .btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+}
+
+@media (max-width: 576px) {
+    .config-page .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .config-page .modal-body {
+        padding: 1rem;
+    }
+    
+    .config-page .table-responsive {
+        font-size: 0.85rem;
+    }
 }
