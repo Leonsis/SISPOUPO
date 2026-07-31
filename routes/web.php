@@ -28,7 +28,12 @@ use App\Http\Controllers\ConfigController;
 // Só pode acessar essa rota quem ESTÁ logado.
 Route::middleware('auth')->group(function() {            
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');// view
+
     Route::get('/despesas', [DespesasController::class, 'despesas'])->name('despesas');// view
+    Route::post('/despesas/store-action', [DespesasController::class, 'storeAction'])->name('despesas.store');// action
+    Route::put('/despesas/update-action/{id}', [DespesasController::class, 'updateAction'])->name('despesas.update');// action
+    Route::delete('/despesas/delete-action/{id}', [DespesasController::class, 'destroyAction'])->name('despesas.destroy');// action
+    Route::get('/despesas/repetir', [DespesasController::class, 'getDespesasRepetirAction'])->name('despesas.repetir');
 
     Route::get('/usuarios', [UsuariosController::class, 'usuarios'])->name('usuarios');// view    
     Route::post('/store-action', [UsuariosController::class, 'storeAction'])->name('usuarios.store');// action
@@ -42,6 +47,7 @@ Route::middleware('auth')->group(function() {
     Route::put('/cartoes/update-action/{id}', [ConfigController::class, 'updateAction'])->name('cartoes.update');// action
     Route::delete('/cartoes/delete-action/{id}', [ConfigController::class, 'destroyAction'])->name('cartoes.destroy');// action
     Route::post('/style/store-action/', [ConfigController::class, 'storeStyleAction'])->name('style.store');// action
+
 });
 
 // Ex: Só pode acessar essa rota quem ESTÁ logado E é ADMIN

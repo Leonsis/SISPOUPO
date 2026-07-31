@@ -6,19 +6,420 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use App\Models\MovimentacaoFinanceira;
+use App\Models\CartaoCredito;
+use Carbon\Carbon;
 
 class DespesasController extends Controller
 {
 
     // Function para visualizar a pagina
     public function despesas()
-    {        
-        // Cada usuário vê seus próprios dados
-        $usuario = Auth::user();
-        
+    {       
         // Testes
         //dd('Está no DespesasController | Linha: ' . __LINE__);
-        return view('despesas');
+
+        // Busca todas as movimentações do usuário logado
+        $movimentacoes = MovimentacaoFinanceira::select(
+                            'mf.id',
+                            'mf.user_id',
+                            'mf.descricao',
+                            'mf.tipo_movimentacao',
+                            'mf.valor',
+                            'mf.classificacao_financeira',
+                            'mf.status_pagamento',
+                            'mf.forma_pagamento',
+                            'mf.quantidade_parcelas',
+                            'mf.data_pagamento',
+                            'mf.created_at',
+                            'cc.nome_cartao'
+                        )
+                        ->from('movimentacao_financeira as mf')
+                        ->leftJoin('cartao_credito as cc', 'cc.id', '=', 'mf.cartao_credito_id') // ← LEFT JOIN
+                        ->where('mf.user_id', Auth::id())
+                        ->where('mf.tipo_movimentacao', 'D')
+                        ->orderBy('mf.created_at', 'desc')
+                        ->get();
+
+        
+        $nTotalDespesas = MovimentacaoFinanceira::where('tipo_movimentacao', 'D')->count();
+       
+        // Busca cartões para o select
+        $cartoes = CartaoCredito::where('user_id', Auth::id())->get();
+        
+        $totalValor = MovimentacaoFinanceira::select(                            
+                            'mf.valor'
+                        )
+                        ->from('movimentacao_financeira as mf')
+                        ->leftJoin('cartao_credito as cc', 'cc.id', '=', 'mf.cartao_credito_id') // ← LEFT JOIN
+                        ->where('mf.user_id', Auth::id())
+                        ->where('mf.tipo_movimentacao', 'D')
+                        ->sum('mf.valor');
+
+        // ============================================
+        // MÊS ATUAL E ANTERIOR (COM PARSE)
+        // ============================================
+        
+        // ✅ Data atual
+        $dataAtual = Carbon::now();
+        $mesAtual = $dataAtual->month;
+        $anoAtual = $dataAtual->year;
+        
+        // ✅ Mês anterior - FORÇANDO com strtotime do PHP
+        $dataAnterior = Carbon::now()->subMonthNoOverflow();
+        $mesAnterior = $dataAnterior->month;
+        $anoAnterior = $dataAnterior->year;        
+
+        // ✅ Despesas Fixas - Mês Atual
+        $vTotalFixaMesAtual = MovimentacaoFinanceira::where('user_id', Auth::id())
+            ->where('tipo_movimentacao', 'D')
+            ->where('classificacao_financeira', 'Fixa')
+            ->whereMonth('data_pagamento', $mesAtual)
+            ->whereYear('data_pagamento', $anoAtual)
+            ->sum('valor');
+
+        // ✅ Despesas Fixas - Mês Anterior
+        $vTotalFixaMesAnterior = MovimentacaoFinanceira::where('user_id', Auth::id())
+            ->where('tipo_movimentacao', 'D')
+            ->where('classificacao_financeira', 'Fixa')
+            ->whereMonth('data_pagamento', $mesAnterior)
+            ->whereYear('data_pagamento', $anoAnterior)
+            ->sum('valor');
+
+        // ✅ Despesas Variáveis - Mês Atual
+        $vTotalVariavelMesAtual = MovimentacaoFinanceira::where('user_id', Auth::id())
+            ->where('tipo_movimentacao', 'D')
+            ->where('classificacao_financeira', 'Variável')
+            ->whereMonth('data_pagamento', $mesAtual)
+            ->whereYear('data_pagamento', $anoAtual)
+            ->sum('valor');
+
+        // ✅ Despesas Variáveis - Mês Anterior
+        $vTotalVariavelMesAnterior = MovimentacaoFinanceira::where('user_id', Auth::id())
+            ->where('tipo_movimentacao', 'D')
+            ->where('classificacao_financeira', 'Variável')
+            ->whereMonth('data_pagamento', $mesAnterior)
+            ->whereYear('data_pagamento', $anoAnterior)
+            ->sum('valor');                        
+
+        return view('despesas', compact('movimentacoes', 'nTotalDespesas', 'cartoes', 'totalValor', 'vTotalFixaMesAtual', 'vTotalFixaMesAnterior', 'vTotalVariavelMesAtual', 'vTotalVariavelMesAnterior'));
     }
+
+    /**
+    * Store a newly created resource in storage.
+    */
+    public function storeAction(Request $request)
+    {
+        // Testes
+        //dd('Está no MovimentacaoFinanceiraController | Linha: ' . __LINE__);
+                
+        // Validações básicas
+        $data = $request->validate([
+            'descricao' => 'required|string|max:255',            
+            'valor' => 'required|numeric|min:0',
+            'classificacao_financeira' => 'required',
+            'status_pagamento' => 'required',
+            'forma_pagamento' => 'required',
+            'quantidade_parcelas' => 'nullable|integer|min:0',
+            'cartao_credito_id' => 'nullable|exists:cartao_credito,id',
+            'data_pagamento' => 'nullable|date',
+            'repetir_proximo_mes' => 'nullable|boolean', // ← ADICIONADO
+        ], [
+            'descricao.required' => 'A descrição é obrigatória.',
+            'descricao.max' => 'A descrição não pode ter mais de 255 caracteres.',
+            
+            'valor.required' => 'O valor é obrigatório.',
+            'valor.numeric' => 'O valor deve ser um número válido.',
+            'valor.min' => 'O valor deve ser maior ou igual a 0.',
+            
+            'classificacao_financeira.required' => 'A classificação financeira é obrigatória.',
+            
+            'status_pagamento.required' => 'O status de pagamento é obrigatório.',
+            
+            'forma_pagamento.required' => 'A forma de pagamento é obrigatória.',    
+            
+            'quantidade_parcelas.integer' => 'O número de parcelas deve ser um número inteiro.',
+            'quantidade_parcelas.min' => 'O número de parcelas deve ser maior ou igual a 0.',
+            
+            'cartao_credito_id.exists' => 'O cartão de crédito selecionado não é válido.',
+            
+            'data_pagamento.date' => 'A data de pagamento deve ser uma data válida.',
+            
+            'repetir_proximo_mes.boolean' => 'O campo repetir no próximo mês deve ser verdadeiro ou falso.',
+        ]);
+
+        // ✅ Tratamento do checkbox (se não veio, é 0)
+        $data['repetir_proximo_mes'] = $request->has('repetir_proximo_mes') ? 1 : 0;
+
+        // Adiciona o user_id
+        $data['user_id'] = Auth::id();
+        
+        // Adiciona o tipo_movimentacao
+        $data['tipo_movimentacao'] = 'D';
+
+        // Cria a movimentação
+        MovimentacaoFinanceira::create($data);
+
+        return redirect()->route('despesas')->with('success', 'Movimentação cadastrada com sucesso!');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateAction(Request $request, $id)
+    {
+        // Testes
+        //dd('Está no MovimentacaoFinanceiraController | Linha: ' . __LINE__);
+        
+        try {
+            // Busca a movimentação pelo ID e verifica se pertence ao usuário logado
+            $movimentacao = MovimentacaoFinanceira::where('id', $id)
+                                                ->where('user_id', Auth::id())
+                                                ->firstOrFail();
+
+            // Regras de validação (igual ao storeAction)
+            $rules = [
+                'descricao' => 'required|string|max:255',
+                'valor' => 'required|numeric|min:0',
+                'classificacao_financeira' => 'required',
+                'status_pagamento' => 'required',
+                'forma_pagamento' => 'required',
+                'quantidade_parcelas' => 'nullable|integer|min:0',
+                'cartao_credito_id' => 'nullable|exists:cartao_credito,id',
+                'data_pagamento' => 'nullable|date',
+            ];
+
+            // Mensagens de validação (igual ao storeAction)
+            $messages = [
+                'descricao.required' => 'A descrição é obrigatória.',
+                'descricao.max' => 'A descrição não pode ter mais de 255 caracteres.',
+                
+                'valor.required' => 'O valor é obrigatório.',
+                'valor.numeric' => 'O valor deve ser um número válido.',
+                'valor.min' => 'O valor deve ser maior ou igual a 0.',
+                
+                'classificacao_financeira.required' => 'A classificação financeira é obrigatória.',
+                
+                'status_pagamento.required' => 'O status de pagamento é obrigatório.',
+                
+                'forma_pagamento.required' => 'A forma de pagamento é obrigatória.',
+                
+                'quantidade_parcelas.integer' => 'O número de parcelas deve ser um número inteiro.',
+                'quantidade_parcelas.min' => 'O número de parcelas deve ser maior ou igual a 0.',
+                
+                'cartao_credito_id.exists' => 'O cartão de crédito selecionado não é válido.',
+                
+                'data_pagamento.date' => 'A data de pagamento deve ser uma data válida.',
+            ];
+
+            // Valida os dados
+            $data = $request->validate($rules, $messages);
+
+            // Verifica se o cartão de crédito pertence ao usuário
+            if ($request->filled('cartao_credito_id')) {
+                $cartao = CartaoCredito::where('id', $request->cartao_credito_id)
+                                    ->where('user_id', Auth::id())
+                                    ->first();
+                
+                if (!$cartao) {
+                    return back()
+                        ->withErrors(['cartao_credito_id' => 'Cartão de crédito não encontrado ou não pertence ao usuário.'])
+                        ->withInput();
+                }
+            }
+
+            // Mantém o tipo_movimentacao como 'D' (Despesa)
+            $data['tipo_movimentacao'] = 'D';
+
+            // Atualiza a movimentação
+            $movimentacao->update($data);
+
+            // Retorna JSON para requisições AJAX
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Movimentação atualizada com sucesso!',
+                    'data' => $movimentacao->fresh()
+                ]);
+            }
+
+            return redirect()->route('despesas')->with('success', 'Movimentação atualizada com sucesso!');
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Movimentação não encontrada!'
+                ], 404);
+            }
+            return redirect()->route('despesas')->with('error', 'Movimentação não encontrada!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            return back()->withErrors($e->errors())->withInput();
+            
+        } catch (\Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erro ao atualizar movimentação: ' . $e->getMessage()
+                ], 500);
+            }
+            return back()
+                ->withErrors(['error' => 'Erro ao atualizar movimentação: ' . $e->getMessage()])
+                ->withInput();
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroyAction($id)
+    {
+        // Testes
+        //dd('Está no MovimentacaoFinanceiraController | Linha: ' . __LINE__);
+
+        try {
+            // Busca a movimentação pelo ID e verifica se pertence ao usuário logado
+            $movimentacao = MovimentacaoFinanceira::where('id', $id)
+                                                  ->where('user_id', Auth::id())
+                                                  ->firstOrFail();
+            
+            // Exclui a movimentação
+            $movimentacao->delete();
+            
+            // Retorna sucesso
+            return response()->json([
+                'success' => true,
+                'message' => 'Movimentação excluída com sucesso!'
+            ]);
+            
+        } catch (\Exception $e) {
+            // Retorna erro
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao excluir movimentação: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get totals for dashboard (AJAX).
+     */
+    public function getTotals()
+    {
+        $totalReceitas = MovimentacaoFinanceira::where('user_id', Auth::id())
+                        ->where('tipo_movimentacao', 'RECEITA')
+                        ->sum('valor');
+        
+        $totalDespesas = MovimentacaoFinanceira::where('user_id', Auth::id())
+                        ->where('tipo_movimentacao', 'DESPESA')
+                        ->sum('valor');
+        
+        $saldo = $totalReceitas - $totalDespesas;
+        
+        $movimentacoesPendentes = MovimentacaoFinanceira::where('user_id', Auth::id())
+                                    ->whereIn('status_pagamento', ['NAO_PAGO', 'pendente', 'atrasado'])
+                                    ->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'total_receitas' => $totalReceitas,
+                'total_despesas' => $totalDespesas,
+                'saldo' => $saldo,
+                'movimentacoes_pendentes' => $movimentacoesPendentes,
+            ]
+        ]);
+    }
+
+    /**
+     * Filter movimentacoes by date range.
+     */
+    public function filterByDate(Request $request)
+    {
+        $query = MovimentacaoFinanceira::where('user_id', Auth::id());
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('created_at', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('created_at', '<=', $request->data_fim);
+        }
+
+        if ($request->filled('tipo_movimentacao')) {
+            $query->where('tipo_movimentacao', $request->tipo_movimentacao);
+        }
+
+        if ($request->filled('status_pagamento')) {
+            $query->where('status_pagamento', $request->status_pagamento);
+        }
+
+        $movimentacoes = $query->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $movimentacoes
+        ]);
+    }
+
+    /**
+    * Get expenses that should be repeated.
+    */
+    public function getDespesasRepetirAction()
+    {
+        try {
+            // Busca despesas do mês anterior com repetir_proximo_mes = 1
+            $mesAnterior = Carbon::now()->subMonth()->month;
+            $anoAnterior = Carbon::now()->subMonth()->year;
+            
+            // ✅ Busca despesas do mês anterior que devem ser repetidas
+            $despesas = MovimentacaoFinanceira::where('user_id', Auth::id())
+                ->where('tipo_movimentacao', 'D')
+                ->where('repetir_proximo_mes', 1)
+                ->whereMonth('data_pagamento', $mesAnterior)
+                ->whereYear('data_pagamento', $anoAnterior)
+                ->get();
+            
+            // Verifica se já foram criadas neste mês (evita duplicação)
+            $mesAtual = Carbon::now()->month;
+            $anoAtual = Carbon::now()->year;
+            
+            $despesasFiltradas = [];
+            
+            foreach ($despesas as $despesa) {
+                // Verifica se já existe uma despesa igual neste mês
+                $existe = MovimentacaoFinanceira::where('user_id', Auth::id())
+                    ->where('tipo_movimentacao', 'D')
+                    ->where('descricao', $despesa->descricao)
+                    ->where('valor', $despesa->valor)
+                    ->where('classificacao_financeira', $despesa->classificacao_financeira)
+                    ->whereMonth('created_at', $mesAtual)
+                    ->whereYear('created_at', $anoAtual)
+                    ->exists();
+                
+                if (!$existe) {
+                    $despesasFiltradas[] = $despesa;
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => $despesasFiltradas
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao buscar despesas: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

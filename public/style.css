@@ -697,3 +697,24 @@ button:hover {
         font-size: 0.85rem;
     }
 }
+
+/* Estilo para os campos em modo de edição */
+.edit-mode input,
+.edit-mode select {
+    min-width: 80px;
+}
+
+.edit-mode input[type="number"] {
+    max-width: 80px;
+}
+
+/* Transição suave */
+.view-mode,
+.edit-mode {
+    transition: all 0.3s ease;
+}
+
+/* Animação do botão de salvar */
+.save-edit i {
+    font-size: 1rem;
+}
