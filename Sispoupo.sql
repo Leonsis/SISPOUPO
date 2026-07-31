@@ -45,6 +45,8 @@ CREATE TABLE movimentacao_financeira (
     quantidade_parcelas INT UNSIGNED NULL, -- Número de parcelas, se aplicável
     cartao_credito_id BIGINT UNSIGNED NULL, -- Referência para o cartão de crédito, se aplicável
     FOREIGN KEY (cartao_credito_id) REFERENCES cartao_credito(id) ON DELETE SET NULL,
+    data_pagamento TIMESTAMP NULL,
+    despesa_repete_mes TINYINT NOT NULL DEFAULT 1, -- 1 = Ativo, 0 = Inativo
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
