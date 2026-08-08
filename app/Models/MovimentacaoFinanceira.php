@@ -66,10 +66,19 @@ class MovimentacaoFinanceira extends Model
         'status_pagamento',
         'forma_pagamento',
         'quantidade_parcelas',
-        'despesa_repete_mes',
         'cartao_credito_id',
+        'grupo_id', // ← ADICIONADO
         'data_pagamento',
+        'data_vencimento',
+        'dia_vencimento',
+        'despesa_repete_mes',
     ];
+
+    // Adicione o relacionamento
+    public function grupo()
+    {
+        return $this->belongsTo(MovimentacaoGrupo::class, 'grupo_id');
+    }
 
     /**
      * The attributes that should be cast.

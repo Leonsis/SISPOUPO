@@ -109,7 +109,7 @@
                                         <option value="Pago">Pago</option>
                                         <option value="Pendente">Pendente</option>
                                         <option value="Atrasado">Atrasado</option>
-                                        <option value="Cancelado">Cancelado</option>
+                                        <option value="Não pago">Não pago</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -133,10 +133,10 @@
                                             <th>Tipo</th>
                                             <th>Valor</th>
                                             <th>Data do Pag.</th>
+                                            <th>Dia Venc.</th>
                                             <th>Status</th>
                                             <th>Forma Pag.</th>
-                                            <th>Parcelas</th>
-                                            <th>Cartão</th>
+                                            <th>Parcelas</th>                                        
                                             <th class="text-center">Ações</th>
                                         </tr>
                                     </thead>
@@ -149,31 +149,22 @@
                                                         <span class="badge {{ $movimentacao->classificacao_financeira == 'Fixa' ? 'bg-warning text-dark' : 'bg-info' }} me-2">                                                            
                                                             {{ $movimentacao->classificacao_financeira == 'Fixa' ? '📌' : '📊' }}
                                                         </span>
-                                                        <span class="view-mode descricao-text">{{ $movimentacao->descricao }}</span>
-                                                        <input type="text" class="form-control form-control-sm bg-dark text-light border-warning edit-mode d-none" 
-                                                            value="{{ $movimentacao->descricao }}" data-field="descricao">
+                                                        {{ $movimentacao->descricao }}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="view-mode tipo-text badge {{ $movimentacao->classificacao_financeira == 'Fixa' ? 'bg-warning text-dark' : 'bg-info' }}">
+                                                    <span class="badge {{ $movimentacao->classificacao_financeira == 'Fixa' ? 'bg-warning text-dark' : 'bg-info' }}">
                                                         {{ $movimentacao->classificacao_financeira }}
                                                     </span>
-                                                    <select class="form-select form-select-sm bg-dark text-light border-warning edit-mode d-none" data-field="classificacao_financeira">
-                                                        <option value="Fixa" {{ $movimentacao->classificacao_financeira == 'Fixa' ? 'selected' : '' }}>Fixa</option>
-                                                        <option value="Variável" {{ $movimentacao->classificacao_financeira == 'Variável' ? 'selected' : '' }}>Variável</option>
-                                                    </select>
                                                 </td>
                                                 <td class="text-warning fw-bold">
-                                                    <span class="view-mode valor-text">R$ {{ number_format($movimentacao->valor, 2, ',', '.') }}</span>
-                                                    <input type="number" step="0.01" class="form-control form-control-sm bg-dark text-light border-warning edit-mode d-none" 
-                                                        value="{{ $movimentacao->valor }}" data-field="valor">
+                                                    R$ {{ number_format($movimentacao->valor, 2, ',', '.') }}
                                                 </td>
                                                 <td>
-                                                    <span class="view-mode data-text" data-original-date="{{ $movimentacao->data_pagamento }}">
-                                                        {{ \Carbon\Carbon::parse($movimentacao->data_pagamento)->format('d/m/Y') }}
-                                                    </span>
-                                                    <input type="date" class="form-control form-control-sm bg-dark text-light border-warning edit-mode d-none" 
-                                                        value="{{ $movimentacao->data_pagamento }}" data-field="data_pagamento">
+                                                    {{ \Carbon\Carbon::parse($movimentacao->data_pagamento)->format('d/m/Y') }}
+                                                </td>
+                                                <td>
+                                                     {{ $movimentacao->dia_vencimento ? 'Dia ' . $movimentacao->dia_vencimento : '-' }}
                                                 </td>
                                                 <td>
                                                     @php
@@ -193,63 +184,25 @@
                                                             'NAO_PAGO' => 'Não Pago',
                                                         ];
                                                     @endphp
-                                                    <span class="view-mode status-text badge {{ $statusMap[$movimentacao->status_pagamento] ?? 'bg-secondary' }}">
+                                                    <span class="badge {{ $statusMap[$movimentacao->status_pagamento] ?? 'bg-secondary' }}">
                                                         {{ $statusLabel[$movimentacao->status_pagamento] ?? $movimentacao->status_pagamento }}
                                                     </span>
-                                                    <select class="form-select form-select-sm bg-dark text-light border-warning edit-mode d-none" data-field="status_pagamento">
-                                                        <option value="Pago" {{ $movimentacao->status_pagamento == 'Pago' ? 'selected' : '' }}>Pago</option>
-                                                        <option value="Pendente" {{ $movimentacao->status_pagamento == 'Pendente' ? 'selected' : '' }}>Pendente</option>
-                                                        <option value="Atrasado" {{ $movimentacao->status_pagamento == 'Atrasado' ? 'selected' : '' }}>Atrasado</option>
-                                                        <option value="Nao Pago" {{ $movimentacao->status_pagamento == 'Nao Pago' ? 'selected' : '' }}>Não Pago</option>
-                                                    </select>
                                                 </td>
                                                 <td>
-                                                    <span class="view-mode forma-text badge bg-dark border border-warning text-light">
-                                                        {{ $movimentacao->forma_pagamento }}
+                                                    <span class="badge {{ !$movimentacao->forma_pagamento ?? 'bg-dark border border-warning text-light' }}">
+                                                        {{ $movimentacao->forma_pagamento ?? '-' }}
                                                     </span>
-                                                    <select class="form-select form-select-sm bg-dark text-light border-warning edit-mode d-none" data-field="forma_pagamento">
-                                                        <option value="Dinheiro" {{ $movimentacao->forma_pagamento == 'Dinheiro' ? 'selected' : '' }}>Dinheiro</option>
-                                                        <option value="Pix" {{ $movimentacao->forma_pagamento == 'Pix' ? 'selected' : '' }}>Pix</option>
-                                                        <option value="Boleto" {{ $movimentacao->forma_pagamento == 'Boleto' ? 'selected' : '' }}>Boleto</option>
-                                                        <option value="Débito" {{ $movimentacao->forma_pagamento == 'Débito' ? 'selected' : '' }}>Débito</option>
-                                                        <option value="Crédito" {{ $movimentacao->forma_pagamento == 'Crédito' ? 'selected' : '' }}>Crédito</option>
-                                                        <option value="Transferência" {{ $movimentacao->forma_pagamento == 'Transferência' ? 'selected' : '' }}>Transferência</option>
-                                                    </select>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="view-mode parcelas-text">{{ $movimentacao->quantidade_parcelas > 0 ? $movimentacao->quantidade_parcelas . 'x' : '-' }}</span>
-                                                    <input type="number" class="form-control form-control-sm bg-dark text-light border-warning edit-mode d-none" 
-                                                        value="{{ $movimentacao->quantidade_parcelas }}" data-field="quantidade_parcelas" min="0" max="24">
-                                                </td>
-                                                <td>
-                                                    @if($movimentacao->nome_cartao)
-                                                        <span class="view-mode cartao-text badge bg-primary bg-opacity-25 text-light">
-                                                            <i class="bi bi-credit-card me-1"></i>
-                                                            {{ $movimentacao->nome_cartao }}
-                                                        </span>
-                                                    @else
-                                                        <span class="view-mode cartao-text text-secondary">-</span>
-                                                    @endif
-                                                    <select class="form-select form-select-sm bg-dark text-light border-warning edit-mode d-none" data-field="cartao_credito_id">
-                                                        <option value="">Selecione...</option>
-                                                        @foreach($cartoes as $cartao)
-                                                            <option value="{{ $cartao->id }}" {{ $movimentacao->cartao_credito_id == $cartao->id ? 'selected' : '' }}>
-                                                                {{ $cartao->nome_cartao }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
+                                                    {{ $movimentacao->quantidade_parcelas > 0 ? $movimentacao->quantidade_parcelas . 'x' : '-' }}
+                                                </td>                                                
                                                 <td>
                                                     <div class="d-flex gap-1 justify-content-center">
-                                                        <button class="btn btn-sm btn-warning toggle-edit" data-id="{{ $movimentacao->id }}" title="Editar">
-                                                            <i class="bi bi-pencil-fill"></i>
-                                                        </button>
-                                                        <button class="btn btn-sm btn-success save-edit d-none" data-id="{{ $movimentacao->id }}" title="Salvar">
-                                                            <i class="bi bi-check-lg"></i>
-                                                        </button>
-                                                        <button class="btn btn-sm btn-secondary cancel-edit d-none" data-id="{{ $movimentacao->id }}" title="Cancelar">
-                                                            <i class="bi bi-x-lg"></i>
-                                                        </button>
+                                                        <!-- ✅ Botão para detalhamento -->
+                                                        <a class="btn btn-sm btn-warning" href="{{ route('detalhamentoDespesas', ['id' => $movimentacao->id]) }}" title="Detalhar">
+                                                            <i class="bi bi-eye-fill"></i>
+                                                        </a>
+                                                        <!-- ✅ Botão para excluir -->
                                                         <button class="btn btn-sm btn-outline-danger delete-despesa" 
                                                                 data-id="{{ $movimentacao->id }}" 
                                                                 data-name="{{ $movimentacao->descricao }}" 
@@ -259,7 +212,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @endforeach                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -293,12 +246,14 @@
                             <input type="hidden" id="expenseId">
                             
                             <div class="row g-3">
+                                <!-- Descrição -->
                                 <div class="col-md-6">
                                     <label for="expenseDescription" class="form-label fw-semibold">Descrição</label>
                                     <input name="descricao" type="text" class="form-control bg-dark text-light border-warning" id="expenseDescription" placeholder="Ex: Aluguel" required>
                                     <div class="invalid-feedback">Por favor, informe a descrição.</div>
                                 </div>
                                 
+                                <!-- Tipo de Despesa -->
                                 <div class="col-md-6">
                                     <label for="expenseType" class="form-label fw-semibold">
                                         Tipo de Despesa
@@ -317,20 +272,14 @@
                                     <div class="invalid-feedback">Por favor, selecione o tipo.</div>
                                 </div>
                                 
+                                <!-- Valor -->
                                 <div class="col-md-6">
                                     <label for="expenseAmount" class="form-label fw-semibold">Valor (R$)</label>
                                     <input name="valor" type="number" step="0.01" class="form-control bg-dark text-light border-warning" id="expenseAmount" placeholder="0,00" required>
                                     <div class="invalid-feedback">Por favor, informe o valor.</div>
                                 </div>
                                 
-                                <!-- ✅ Data do Pagamento (Só aparece se status for Pago) -->
-                                <div class="col-md-6" id="divDataPagamento" style="display: none;">
-                                    <label for="expenseDate" class="form-label fw-semibold">Data do pagamento</label>
-                                    <input name="data_pagamento" type="date" class="form-control bg-dark text-light border-warning" id="expenseDate">
-                                    <div class="invalid-feedback">Por favor, informe a data.</div>
-                                    <small class="text-secondary">Preencha apenas se a despesa foi paga</small>
-                                </div>
-                                
+                                <!-- Status de Pagamento -->
                                 <div class="col-md-6">
                                     <label for="expenseStatus" class="form-label fw-semibold">Status de Pagamento</label>
                                     <select name="status_pagamento" class="form-select bg-dark text-light border-warning" id="expenseStatus" required>
@@ -338,14 +287,49 @@
                                         <option value="Pago">Pago</option>
                                         <option value="Pendente">Pendente</option>
                                         <option value="Atrasado">Atrasado</option>
-                                        <option value="Cancelado">Cancelado</option>
+                                        <option value="Não pago">Não pago</option>
                                     </select>
                                     <div class="invalid-feedback">Por favor, selecione o status.</div>
                                 </div>
                                 
+                                <!-- Dia de Vencimento (SEMPRE VISÍVEL) -->
                                 <div class="col-md-6">
+                                    <label for="expenseDueDay" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-day me-1"></i>
+                                        Dia de Vencimento
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark border-warning text-warning">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input name="dia_vencimento" type="number" class="form-control bg-dark text-light border-warning" 
+                                            id="expenseDueDay" placeholder="01" min="1" max="31" required>
+                                        <span class="input-group-text bg-dark border-warning text-secondary">Dia do mês</span>
+                                    </div>
+                                    <div class="invalid-feedback">Por favor, informe o dia de vencimento (1 a 31).</div>
+                                    <small class="text-secondary">Ex: 01 = primeiro dia útil do mês</small>
+                                </div>
+                                
+                                <!-- Data do Pagamento (Só aparece se status for Pago) -->
+                                <div class="col-md-6" id="divDataPagamento" style="display: none;">
+                                    <label for="expenseDate" class="form-label fw-semibold">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Data do Pagamento
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark border-warning text-warning">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input name="data_pagamento" type="date" class="form-control bg-dark text-light border-warning" id="expenseDate">
+                                    </div>
+                                    <div class="invalid-feedback">Por favor, informe a data de pagamento.</div>
+                                    <small class="text-secondary">Preencha apenas se a despesa foi paga</small>
+                                </div>
+                                
+                                <!-- Forma de Pagamento -->
+                                <div class="col-md-6" id="divFormaPagamento" style="display: none;">
                                     <label for="expensePaymentMethod" class="form-label fw-semibold">Forma de Pagamento</label>
-                                    <select name="forma_pagamento" class="form-select bg-dark text-light border-warning" id="expensePaymentMethod" required>
+                                    <select name="forma_pagamento" class="form-select bg-dark text-light border-warning" id="expensePaymentMethod" id="expenseFormPayment">
                                         <option value="">Selecione...</option>
                                         <option value="Dinheiro">Dinheiro</option>
                                         <option value="Pix">Pix</option>
@@ -357,7 +341,7 @@
                                     <div class="invalid-feedback">Por favor, selecione a forma de pagamento.</div>
                                 </div>
                                 
-                                <!-- ✅ Nº Parcelas (Só aparece se for Crédito, Boleto ou Pix) -->
+                                <!-- Nº Parcelas (Só aparece se for Crédito, Boleto ou Pix) -->
                                 <div class="col-md-4" id="divParcelas" style="display: none;">
                                     <label for="expenseInstallments" class="form-label fw-semibold">Nº Parcelas</label>
                                     <input name="quantidade_parcelas" type="number" class="form-control bg-dark text-light border-warning" id="expenseInstallments" placeholder="0" min="0" max="24" value="0">
@@ -365,7 +349,7 @@
                                     <div class="invalid-feedback">Informe um número válido de parcelas.</div>
                                 </div>
                                 
-                                <!-- ✅ Cartão de Crédito (Só aparece se a forma for Crédito) -->
+                                <!-- Cartão de Crédito (Só aparece se a forma for Crédito) -->
                                 <div class="col-md-8" id="divCartao" style="display: none;">
                                     <label for="expenseCardName" class="form-label fw-semibold">Cartão de Crédito</label>
                                     <select name="cartao_credito_id" class="form-select bg-dark text-light border-warning" id="expenseCardName">
@@ -378,10 +362,10 @@
                                     <div class="invalid-feedback">Por favor, selecione um cartão.</div>
                                 </div>
                                 
-                                <!-- ✅ CHECKBOX: Repetir no próximo mês? -->
+                                <!-- CHECKBOX: Repetir no próximo mês? -->
                                 <div class="col-12">
                                     <div class="form-check form-switch">
-                                        <input name="repetir_proximo_mes" class="form-check-input" type="checkbox" role="switch" id="repetirProximoMes" value="1">
+                                        <input name="despesa_repete_mes" class="form-check-input" type="checkbox" role="switch" id="repetirProximoMes" value="1">
                                         <label class="form-check-label text-warning fw-semibold" for="repetirProximoMes">
                                             <i class="bi bi-arrow-repeat me-2"></i>
                                             Repetir no próximo mês?
@@ -453,11 +437,6 @@
             // ============================================
             // CHECKBOX - Repetir no próximo mês?
             // ============================================
-            // O checkbox já envia value="1" quando marcado
-            // Quando desmarcado, não envia valor (padrão do checkbox)
-            // No controller, você deve verificar se o campo existe
-
-            // Para garantir que o valor seja 0 quando desmarcado, adicione um hidden
             $('#repetirProximoMes').on('change', function() {
                 if ($(this).is(':checked')) {
                     $(this).val('1');
@@ -465,24 +444,31 @@
                     $(this).val('0');
                 }
             });
-            
+
             // ============================================
             // CONTROLE DE EXIBIÇÃO DOS CAMPOS
             // ============================================
-            
+
             // 1. DATA DE PAGAMENTO - Só aparece se status = Pago
             $('#expenseStatus').on('change', function() {
                 const status = $(this).val();
                 if (status === 'Pago') {
                     $('#divDataPagamento').show('slow');
                     $('#expenseDate').prop('required', true);
+                
+                    $('#divFormaPagamento').show('slow');                    
+                    $('#expenseFormPayment').prop('required', true);
                 } else {
                     $('#divDataPagamento').hide('slow');
                     $('#expenseDate').prop('required', false);
                     $('#expenseDate').val(''); // Limpa o campo
+
+                    $('#divFormaPagamento').hide('slow');
+                    $('#expenseDate').prop('required', false);                    
+                    $('#expenseFormPayment').val(''); // Limpa o campo
                 }
             });
-            
+
             // 2. CARTÃO DE CRÉDITO - Só aparece se forma = Crédito
             // 3. PARCELAS - Aparece se forma = Crédito, Boleto ou Pix
             $('#expensePaymentMethod').on('change', function() {
@@ -508,7 +494,7 @@
                     $('#expenseInstallments').val(0); // Reseta para 0
                 }
             });
-            
+
             // ============================================
             // VALIDAÇÃO AO ENVIAR O FORMULÁRIO
             // ============================================
@@ -518,6 +504,15 @@
                 
                 // Limpa erros anteriores
                 $(this).find('.is-invalid').removeClass('is-invalid');
+                $('.alert-validation').remove();
+                
+                // Valida Dia de Vencimento (sempre obrigatório)
+                /*const diaVencimento = parseInt($('#expenseDueDay').val());
+                if (!diaVencimento || diaVencimento < 1 || diaVencimento > 31) {
+                    isValid = false;
+                    $('#expenseDueDay').addClass('is-invalid');
+                    errorMessages.push('O dia de vencimento deve ser entre 1 e 31.');
+                }*/
                 
                 // Valida Data de Pagamento (se status for Pago)
                 const status = $('#expenseStatus').val();
@@ -556,8 +551,8 @@
                     
                     // Mostra alerta com erros
                     let alertHtml = `
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>Erros de validação:</h5>
+                        <div class="alert alert-danger alert-dismissible fade show alert-validation" role="alert">
+                            <h6><i class="bi bi-exclamation-triangle-fill me-2"></i>Erros de validação:</h6>
                             <ul class="mb-0">
                     `;
                     errorMessages.forEach(function(error) {
@@ -569,9 +564,6 @@
                         </div>
                     `;
                     
-                    // Remove alertas antigos
-                    $('.alert-validation').remove();
-                    
                     // Insere o alerta no topo do modal
                     $('.modal-body').prepend(alertHtml);
                     
@@ -581,7 +573,18 @@
                     return false;
                 }
             });
-            
+
+            // ============================================
+            // FORMATAR DIA DE VENCIMENTO (adicionar zero à esquerda)
+            // ============================================
+            $('#expenseDueDay').on('blur', function() {
+                let valor = parseInt($(this).val());
+                if (valor >= 1 && valor <= 31) {
+                    // Formata com dois dígitos (ex: 1 -> 01)
+                    $(this).val(String(valor).padStart(2, '0'));
+                }
+            });
+
             // ============================================
             // RESET AO FECHAR O MODAL
             // ============================================
@@ -600,6 +603,19 @@
                 $('#expenseDate').prop('required', false);
                 $('#expenseCardName').prop('required', false);
                 $('#expenseInstallments').prop('required', false);
+            });
+
+            // ============================================
+            // INICIALIZAR TOOLTIPS
+            // ============================================
+            $(document).ready(function() {
+                // Inicializa tooltips do Bootstrap
+                $('[data-bs-toggle="tooltip"]').tooltip();
+                
+                // Define o dia atual como padrão (opcional)
+                const hoje = new Date();
+                const diaAtual = String(hoje.getDate()).padStart(2, '0');
+                $('#expenseDueDay').attr('placeholder', diaAtual);
             });
             
             
@@ -813,153 +829,7 @@
         </script>
 
         <script>
-            $(document).ready(function() {
-                // ============================================
-                // EDITAR - Mostrar campos de edição
-                // ============================================
-                $(document).on('click', '.toggle-edit', function() {
-                    const row = $(this).closest('tr');
-                    const id = $(this).data('id');
-                    
-                    $(this).addClass('d-none');
-                    row.find('.delete-despesa').addClass('d-none');
-                    row.find('.save-edit').removeClass('d-none');
-                    row.find('.cancel-edit').removeClass('d-none');
-                    row.find('.view-mode').addClass('d-none');
-                    row.find('.edit-mode').removeClass('d-none');
-                });
-
-                // ============================================
-                // CANCELAR - Voltar ao modo de visualização
-                // ============================================
-                $(document).on('click', '.cancel-edit', function() {
-                    const row = $(this).closest('tr');
-                    const id = $(this).data('id');
-                    
-                    row.find('.toggle-edit').removeClass('d-none');
-                    row.find('.delete-despesa').removeClass('d-none');
-                    row.find('.save-edit').addClass('d-none');
-                    row.find('.cancel-edit').addClass('d-none');
-                    
-                    // Restaura os valores originais
-                    const descricaoOriginal = row.find('.descricao-text').text().trim();
-                    row.find('input[data-field="descricao"]').val(descricaoOriginal);
-                    
-                    const tipoOriginal = row.find('.tipo-text').text().trim();
-                    row.find('select[data-field="classificacao_financeira"]').val(tipoOriginal);
-                    
-                    const valorOriginal = row.find('.valor-text').text().trim().replace('R$ ', '').replace('.', '').replace(',', '.');
-                    row.find('input[data-field="valor"]').val(valorOriginal);
-                    
-                    const dataOriginal = row.find('.data-text').text().trim();
-                    const dataParts = dataOriginal.split('/');
-                    const dataFormatada = dataParts[2] + '-' + dataParts[1] + '-' + dataParts[0];
-                    row.find('input[data-field="data_pagamento"]').val(dataFormatada);
-                    
-                    const statusOriginal = row.find('.status-text').text().trim();
-                    row.find('select[data-field="status_pagamento"]').val(statusOriginal);
-                    
-                    const formaOriginal = row.find('.forma-text').text().trim();
-                    row.find('select[data-field="forma_pagamento"]').val(formaOriginal);
-                    
-                    const parcelasOriginal = row.find('.parcelas-text').text().trim().replace('x', '').trim();
-                    row.find('input[data-field="quantidade_parcelas"]').val(parcelasOriginal === '-' ? 0 : parcelasOriginal);
-                    
-                    const cartaoText = row.find('.cartao-text').text().trim();
-                    if (cartaoText !== '-') {
-                        row.find('select[data-field="cartao_credito_id"] option').each(function() {
-                            if ($(this).text().trim() === cartaoText) {
-                                row.find('select[data-field="cartao_credito_id"]').val($(this).val());
-                            }
-                        });
-                    } else {
-                        row.find('select[data-field="cartao_credito_id"]').val('');
-                    }
-                    
-                    row.find('.view-mode').removeClass('d-none');
-                    row.find('.edit-mode').addClass('d-none');
-                });
-
-                // ============================================
-                // SALVAR - Enviar para o controller
-                // ============================================
-                $(document).on('click', '.save-edit', function() {
-                    const row = $(this).closest('tr');
-                    const id = $(this).data('id');
-                    
-                    // Coleta os dados
-                    const descricao = row.find('input[data-field="descricao"]').val().trim();
-                    const classificacao = row.find('select[data-field="classificacao_financeira"]').val();
-                    const valor = row.find('input[data-field="valor"]').val();
-                    
-                    // ✅ Pega a data do input (já está no formato YYYY-MM-DD)
-                    const data_pagamento = row.find('input[data-field="data_pagamento"]').val();
-                    
-                    // ✅ Pega a data original (para manter se não for alterada)
-                    const dataOriginal = row.find('.data-text').data('original-date') || '';
-                    
-                    const status = row.find('select[data-field="status_pagamento"]').val();
-                    const forma = row.find('select[data-field="forma_pagamento"]').val();
-                    const parcelas = row.find('input[data-field="quantidade_parcelas"]').val();
-                    const cartao = row.find('select[data-field="cartao_credito_id"]').val();
-                    
-                    // ✅ LÓGICA CORRIGIDA: Se a data não foi preenchida, usa a original
-                    let dataEnviar = data_pagamento;
-                    if (!data_pagamento || data_pagamento === '') {
-                        dataEnviar = dataOriginal; // Mantém a data original
-                        console.log('📝 Data não alterada, mantendo original:', dataOriginal);
-                    } else {
-                        console.log('📝 Data alterada:', data_pagamento);
-                    }
-                    
-                    // Prepara os dados para enviar
-                    const dados = {
-                        descricao: descricao,
-                        classificacao_financeira: classificacao,
-                        valor: valor,
-                        data_pagamento: dataEnviar, // ← Envia a data original se não foi alterada
-                        status_pagamento: status,
-                        forma_pagamento: forma,
-                        quantidade_parcelas: parcelas || 0,
-                        cartao_credito_id: cartao || null,
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        _method: 'PUT'
-                    };
-                    
-                    console.log('📝 Dados enviados:', dados);
-                    
-                    // Mostra loading
-                    const saveBtn = $(this);
-                    saveBtn.html('<span class="spinner-border spinner-border-sm" role="status"></span>');
-                    saveBtn.prop('disabled', true);
-                    
-                    // Envia para o controller
-                    $.ajax({
-                        url: '/despesas/update-action/' + id,
-                        type: 'POST',
-                        data: dados,
-                        success: function(response) {
-                            showToast('Movimentação atualizada com sucesso!', 'success');
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000);
-                        },
-                        error: function(xhr) {
-                            saveBtn.html('<i class="bi bi-check-lg"></i>');
-                            saveBtn.prop('disabled', false);
-                            
-                            let errorMessage = 'Erro ao atualizar!';
-                            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                const errors = xhr.responseJSON.errors;
-                                const firstError = Object.values(errors)[0];
-                                errorMessage = firstError ? firstError[0] : 'Erro de validação!';
-                                console.log('📋 Erros de validação:', errors);
-                            }
-                            showToast(errorMessage, 'danger');
-                            console.log('❌ Erro:', xhr.responseText);
-                        }
-                    });
-                });
+            $(document).ready(function() {                                
 
                 // ============================================
                 // EXCLUIR Despesas
@@ -1121,7 +991,7 @@
                     return;
                 }
                 
-                // 2. Busca as despesas com repetir_proximo_mes = 1
+                // 2. Busca as despesas com despesa_repete_mes = 1
                 $.ajax({
                     url: '/despesas/repetir',
                     type: 'GET',
@@ -1168,7 +1038,8 @@
                     quantidade_parcelas: despesa.quantidade_parcelas || 0,
                     cartao_credito_id: despesa.cartao_credito_id || null,
                     data_pagamento: null, // Ainda não paga
-                    repetir_proximo_mes: 1, // Mantém a repetição
+                    dia_vencimento: despesa.dia_vencimento || null,
+                    despesa_repete_mes: 1, // Mantém a repetição 
                     _token: $('meta[name="csrf-token"]').attr('content')
                 };
                 
@@ -1187,5 +1058,17 @@
                 });
             }
         </script>
+        @if ($errors->any())
+            <div style="background: #1a1a1a; color: #ff6b6b; padding: 15px; border-radius: 5px; margin: 10px; border: 2px solid #ff6b6b;">
+                <strong style="color: #fff;">🔍 ERROS DE VALIDAÇÃO:</strong>
+                <ul style="color: #fff; list-style: none; padding: 0;">
+                    @foreach ($errors->all() as $error)
+                        <li style="padding: 5px 0; border-bottom: 1px solid #333;">
+                            ❌ {{ $error }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </body>
 </html>
