@@ -60,7 +60,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="usersTableBody">
-                                        @foreach ($usuarios as $usuario)
+                                        @foreach ($vUsuarios as $usuario)
                                             <tr>
                                                 <td>#{{ $usuario->id }}</td>
                                                 <td>
@@ -117,7 +117,7 @@
                         </div>
                         <div class="card-footer border-warning">
                             <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                <span class="text-light" id="totalUsers">Total: {{ $nTotalUsuarios }} usuários</span>
+                                <span class="text-light" id="totalUsers">Total: {{ $vNTotalUsuarios }} usuários</span>
                                 <nav aria-label="Navegação de páginas">
                                     <ul class="pagination pagination-sm mb-0">
                                         <li class="page-item disabled">
@@ -385,29 +385,65 @@
                 // ============================================
                 // MÁSCARA CPF/CNPJ - Modal Cadastro
                 // ============================================
-                $('#cpf_cnpj, #editCpfCnpj').on('input', function() {
-                    let valor = $(this).val().replace(/[^a-zA-Z0-9]/g, '');
-                    
-                    // Limita a 14 dígitos
-                    if (valor.length > 14) {
-                        valor = valor.slice(0, 14);
-                    }
-                    
-                    // Aplica máscara
+                $('#cpf_cnpj, #editCpfCnpj').on('input', function () {
+
+                    // Remove caracteres especiais e mantém letras e números
+                    let valor = $(this).val().replace(/[^\p{L}\p{N}]/gu, '').toUpperCase();
+
+                    // Limita a 14 caracteres
+                    valor = valor.slice(0, 14);
+
+                    // ============================================
+                    // CPF - até 11 caracteres
+                    // Formato: 000.000.000-00
+                    // ============================================
                     if (valor.length <= 11) {
-                        // CPF: 000.000.000-00
-                        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
-                        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
-                        valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+                        if (valor.length > 3) {
+                            valor = valor.slice(0, 3) + '.' + valor.slice(3);
+                        }
+
+                        if (valor.length > 7) {
+                            valor = valor.slice(0, 7) + '.' + valor.slice(7);
+                        }
+
+                        if (valor.length > 11) {
+                            valor = valor.slice(0, 11) + '-' + valor.slice(11);
+                        }
+
+                    // ============================================
+                    // CNPJ ALFANUMÉRICO - 12 a 14 caracteres
+                    // Formato: AA.AAA.AAA/AAAA-00
+                    // ============================================
                     } else {
-                        // CNPJ: 00.000.000/0000-00
-                        valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
-                        valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-                        valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
-                        valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+
+                        valor = valor.replace(/[^\p{L}\p{N}]/gu, '');
+
+                        let mascarado = '';
+
+                        mascarado = valor.slice(0, 2);
+
+                        if (valor.length > 2) {
+                            mascarado += '.' + valor.slice(2, 5);
+                        }
+
+                        if (valor.length > 5) {
+                            mascarado += '.' + valor.slice(5, 8);
+                        }
+
+                        if (valor.length > 8) {
+                            mascarado += '/' + valor.slice(8, 12);
+                        }
+
+                        if (valor.length > 12) {
+                            mascarado += '-' + valor.slice(12, 14);
+                        }
+
+                        valor = mascarado;
                     }
-                    
+
                     $(this).val(valor);
+
                 });
 
                 // ============================================
@@ -447,7 +483,7 @@
                     $(this).find('.is-invalid').removeClass('is-invalid');
                     $(this).find('.alert-validation').remove();
                     
-                    // 1. Nome de Usuário
+                    // Nome de Usuário
                     const nomeUsuario = $('#userName').val().trim();
                     if (nomeUsuario === '') {
                         isValid = false;
@@ -456,7 +492,7 @@
                         if (!firstError) firstError = $('#userName');
                     }
                     
-                    // 2. Nome Completo
+                    // Nome Completo
                     const nome = $('#namerUser').val().trim();
                     if (nome === '') {
                         isValid = false;
@@ -465,7 +501,7 @@
                         if (!firstError) firstError = $('#namerUser');
                     }
                     
-                    // 3. Email
+                    // Email
                     const email = $('#userEmail').val().trim();
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     if (email === '') {
@@ -480,8 +516,8 @@
                         if (!firstError) firstError = $('#userEmail');
                     }
                     
-                    // 4. CPF/CNPJ
-                    const cpfCnpj = $('#cpf_cnpj').val().replace(/[^a-zA-Z0-9]/g, '');
+                    // CPF/CNPJ
+                    const cpfCnpj = $('#cpf_cnpj').val().replace(/[^\p{L}\p{N}]/gu, '');
                     if (cpfCnpj === '') {
                         isValid = false;
                         $('#cpf_cnpj').addClass('is-invalid');
@@ -494,7 +530,7 @@
                         if (!firstError) firstError = $('#cpf_cnpj');
                     }
                     
-                    // 5. Telefone
+                    // Telefone
                     const telefone = $('#userTelefone').val().replace(/\D/g, '');
                     if (telefone === '') {
                         isValid = false;
@@ -508,7 +544,7 @@
                         if (!firstError) firstError = $('#userTelefone');
                     }
                     
-                    // 6. Senha
+                    // Senha
                     const password = $('#userPassword').val();
                     if (password === '') {
                         isValid = false;
@@ -522,7 +558,7 @@
                         if (!firstError) firstError = $('#userPassword');
                     }                        
                     
-                    // 8. Nível de Acesso
+                    // Nível de Acesso
                     const nivelAcesso = $('#userLevel').val();
                     if (nivelAcesso === '') {
                         isValid = false;
@@ -531,7 +567,7 @@
                         if (!firstError) firstError = $('#userLevel');
                     }
                     
-                    // 9. Status
+                    // Status
                     const status = $('#userStatus').val();
                     if (status === '') {
                         isValid = false;
@@ -540,7 +576,7 @@
                         if (!firstError) firstError = $('#userStatus');
                     }
                     
-                    // Se houver erros, exibe alerta
+                    // Se houver erros, exibe alerta no modal
                     if (!isValid) {
                         e.preventDefault();
                         
@@ -961,14 +997,10 @@
                         if (str_contains($error, 'cpf_cnpj') || str_contains($error, 'CPF/CNPJ')) {
                             if (str_contains($error, 'already been taken') || str_contains($error, 'já está em uso')) {
                                 $friendlyMessages[] = '🆔 Este CPF/CNPJ já está cadastrado.';
-                            } elseif (str_contains($error, 'required') || str_contains($error, 'obrigatório')) {
-                                $friendlyMessages[] = '🆔 O campo CPF/CNPJ é obrigatório.';
-                            } elseif (str_contains($error, 'size') || str_contains($error, 'caracteres')) {
-                                $friendlyMessages[] = '🆔 CPF deve ter 11 dígitos ou CNPJ 14 dígitos.';
                             } else {
-                                $friendlyMessages[] = '🆔 O campo CPF/CNPJ é obrigatório ou já está cadastrado.';
+                                $friendlyMessages[] = '🆔 O campo CPF/CNPJ invalido.';
                             }
-                            continue;
+                            continue;                            
                         }
                         
                         // 5. Telefone

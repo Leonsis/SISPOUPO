@@ -18,7 +18,9 @@ CREATE TABLE users (
 
 -- Senha: JohnDoe
 INSERT INTO users (nome_usuario, nome, tipo_usuario, cpf_cnpj, telefone, email, password, situacao_cadastral) 
-VALUES ('SisPoupo', 'Usuario Teste','USUARIO_PADRAO', '00000000000','00000000', 'sispoupo@gmail.com', '$2y$10$jSAr/RwmjhwioDlJErOk9OQEO7huLz9O6Iuf/udyGbHPiTNuB3Iuy', 1);
+VALUES ('SisPoupo', 'Usuario Teste','USUARIO_PADRAO', '00000000000','00000000', 'sispoupo@gmail.com', '$2y$10$jSAr/RwmjhwioDlJErOk9OQEO7huLz9O6Iuf/udyGbHPiTNuB3Iuy', 1),
+('SisPoupoAdmin', 'Usuario Teste2','USUARIO_ADMIN', '11111111111','11111111', 'sispoupo@gmail.com', '$2y$10$jSAr/RwmjhwioDlJErOk9OQEO7huLz9O6Iuf/udyGbHPiTNuB3Iuy', 1),
+('SisPoupoEmpresa', 'Usuario Teste3','USUARIO_EMPRESA', '22222222222','22222222', 'sispoupo@gmail.com', '$2y$10$jSAr/RwmjhwioDlJErOk9OQEO7huLz9O6Iuf/udyGbHPiTNuB3Iuy', 1);
 
 DROP TABLE IF EXISTS cartao_credito;
 CREATE TABLE cartao_credito (
@@ -65,6 +67,7 @@ CREATE TABLE movimentacao_financeira (
     data_pagamento TIMESTAMP NULL,
     data_vencimento DATE NOT NULL,
     dia_vencimento INT NULL,
+    Observacoes TEXT NULL,
     despesa_repete_mes TINYINT NOT NULL DEFAULT 1, -- 1 = Ativo, 0 = Inativo
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
