@@ -120,10 +120,10 @@ class DespesasController extends Controller
     }
 
     // Function para visualizar a pagina de detalhamento
-    public function detalhamentoDespesas()
+    public function detalhamentoDespesas($id)
     {       
         // Testes
-        //dd('Está no DespesasController | Linha: ' . __LINE__);        
+        //dd('Está no DespesasController | Linha: ' . __LINE__);
         $movimentacoes = MovimentacaoFinanceira::select(
                             'mf.id',
                             'mf.user_id',
@@ -142,16 +142,17 @@ class DespesasController extends Controller
                         )
                         ->from('movimentacao_financeira as mf')
                         ->leftJoin('cartao_credito as cc', 'cc.id', '=', 'mf.cartao_credito_id')
-                        ->where('mf.user_id', Auth::id())
+                        ->where('mf.id', $id)
+                        ->where('mf.user_id', Auth::id())                        
                         ->where('mf.tipo_movimentacao', 'D')
                         ->orderBy('mf.created_at', 'desc')
-                        ->get();
-
-        
+                        ->firstOrFail();
+        $movimentacoes = $movimentacoes->first(); // Pega o primeiro registro do resultado da consulta
+        //dd($movimentacoes);
         $nTotalDespesas = MovimentacaoFinanceira::where('tipo_movimentacao', 'D')->count();
        
-        $cartoes = CartaoCredito::where('user_id', Auth::id())->get();
-        
+        $cartoes = CartaoCredito::where('user_id', Auth::id())->get();              
+
         $totalValor = MovimentacaoFinanceira::select(                            
                             'mf.valor'
                         )
@@ -199,8 +200,7 @@ class DespesasController extends Controller
             ->where('classificacao_financeira', 'Variável')
             ->whereMonth('data_pagamento', $mesAnterior)
             ->whereYear('data_pagamento', $anoAnterior)
-            ->sum('valor');                        
-
+            ->sum('valor');                                
         return view('detalhamentoDespesa', compact('movimentacoes', 'nTotalDespesas', 'cartoes', 'totalValor', 'vTotalFixaMesAtual', 'vTotalFixaMesAnterior', 'vTotalVariavelMesAtual', 'vTotalVariavelMesAnterior'));
     }
 
@@ -211,7 +211,7 @@ class DespesasController extends Controller
     {
         // Testes
         //dd('Está no MovimentacaoFinanceiraController | Linha: ' . __LINE__);
-        //dd($request->all());   
+        dd($request->all());   
 
         // Validações básicas
         $data = $request->validate([

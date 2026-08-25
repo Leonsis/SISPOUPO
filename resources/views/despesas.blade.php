@@ -464,7 +464,7 @@
                     $('#expenseDate').val(''); // Limpa o campo
 
                     $('#divFormaPagamento').hide('slow');
-                    $('#expenseDate').prop('required', false);                    
+                    $('#expenseFormPayment').prop('required', false);                    
                     $('#expenseFormPayment').val(''); // Limpa o campo
                 }
             });
@@ -504,15 +504,7 @@
                 
                 // Limpa erros anteriores
                 $(this).find('.is-invalid').removeClass('is-invalid');
-                $('.alert-validation').remove();
-                
-                // Valida Dia de Vencimento (sempre obrigatório)
-                /*const diaVencimento = parseInt($('#expenseDueDay').val());
-                if (!diaVencimento || diaVencimento < 1 || diaVencimento > 31) {
-                    isValid = false;
-                    $('#expenseDueDay').addClass('is-invalid');
-                    errorMessages.push('O dia de vencimento deve ser entre 1 e 31.');
-                }*/
+                $('.alert-validation').remove();                                
                 
                 // Valida Data de Pagamento (se status for Pago)
                 const status = $('#expenseStatus').val();

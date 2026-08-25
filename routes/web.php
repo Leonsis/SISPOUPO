@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');// view
 
     Route::get('/despesas', [DespesasController::class, 'despesas'])->name('despesas');// view
+    Route::get('/despesas/detalhamento/{id}', [DespesasController::class, 'detalhamentoDespesas'])->name('detalhamentoDespesas');// view
     Route::post('/despesas/store-action', [DespesasController::class, 'storeAction'])->name('despesas.store');// action
     Route::put('/despesas/update-action/{id}', [DespesasController::class, 'updateAction'])->name('despesas.update');// action
     Route::delete('/despesas/delete-action/{id}', [DespesasController::class, 'destroyAction'])->name('despesas.destroy');// action

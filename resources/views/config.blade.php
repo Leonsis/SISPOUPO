@@ -189,7 +189,7 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     
-                    <form action="{{ route('cartoes.store') }}" method="POST" id="cardForm" novalidate>
+                    <form action="{{ route('cartoes.store') }}" method="POST" id="cardForm" class="validacaoForm" novalidate>
                         @csrf
                         
                         <div class="modal-body">
@@ -197,19 +197,19 @@
                             
                             <div class="mb-3">
                                 <label for="CardName" class="form-label fw-semibold">Nome do Cartão</label>
-                                <input name="nome_cartao" type="text" class="form-control bg-dark text-light border-warning" id="CardName" placeholder="Ex: Nubank, Itaú, etc." required>
+                                <input name="nome_cartao" type="text" class="validaCardName form-control bg-dark text-light border-warning" id="CardName" placeholder="Ex: Nubank, Itaú, etc." required>
                                 <div class="invalid-feedback">Por favor, informe o nome do cartão.</div>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="CardLimit" class="form-label fw-semibold">Limite de Crédito (R$)</label>
-                                <input name="limite_credito" type="number" step="0.01" class="form-control bg-dark text-light border-warning" id="CardLimit" placeholder="0,00" required>
+                                <input name="limite_credito" type="number" step="0.01" class="validaCardLimit form-control bg-dark text-light border-warning" id="CardLimit" placeholder="0,00" required>
                                 <div class="invalid-feedback">Por favor, informe o limite do cartão.</div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="CardDueDate" class="form-label fw-semibold">Dia do Vencimento</label>
-                                <select id="CardDueDate" name="dia_vencimento" class="form-select bg-dark text-light border-warning" required>
+                                <select id="CardDueDate" name="dia_vencimento" class="validaCardDueDate form-select bg-dark text-light border-warning" required>
                                     <option value="">Selecione o dia</option>
                                 </select>
 
@@ -250,7 +250,7 @@
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>                    
-                    <form action="#" method="POST" id="editForm" novalidate>
+                    <form action="#" method="POST" id="editForm" class="validacaoForm" novalidate>
                         @csrf
                         @method('PUT')
                         <input type="hidden" id="editCartaoId" name="id">
@@ -260,19 +260,19 @@
                                 
                                 <div class="mb-3">
                                     <label for="editCardName" class="form-label fw-semibold">Nome do Cartão</label>
-                                    <input name="nome_cartao" type="text" class="form-control bg-dark text-light border-warning" id="editCardName" placeholder="Ex: Nubank, Itaú, etc." required>
+                                    <input name="nome_cartao" type="text" class="validaCardName form-control bg-dark text-light border-warning" id="editCardName" placeholder="Ex: Nubank, Itaú, etc." required>
                                     <div class="invalid-feedback">Por favor, informe o nome do cartão.</div>
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label for="editCardLimit" class="form-label fw-semibold">Limite de Crédito (R$)</label>
-                                    <input name="limite_credito" type="number" step="0.01" class="form-control bg-dark text-light border-warning" id="editCardLimit" placeholder="0,00" required>
+                                    <input name="limite_credito" type="number" step="0.01" class="validaCardLimit form-control bg-dark text-light border-warning" id="editCardLimit" placeholder="0,00" required>
                                     <div class="invalid-feedback">Por favor, informe o limite do cartão.</div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="editCardDueDate" class="form-label fw-semibold">Dia do Vencimento</label>
-                                    <select id="editCardDueDate" name="dia_vencimento" class="form-select bg-dark text-light border-warning" required>
+                                    <select id="editCardDueDate" name="dia_vencimento" class="validaCardDueDate form-select bg-dark text-light border-warning" required>
                                         <option value="">Selecione o dia</option>
                                     </select>
 
@@ -319,8 +319,8 @@
                         <input type="hidden" id="deleteCartaoId">
                     </div>
                     <div class="modal-footer border-danger">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <button type="button" class="btn " data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn " id="confirmDeleteBtn">
                             <i class="bi bi-trash-fill me-2"></i>
                             Excluir
                         </button>
@@ -332,9 +332,9 @@
         <script>                                        
             $(document).ready(function() {
                 // ============================================
-                // VALIDAÇÃO DO FORMULÁRIO DE EDIÇÃO
+                // VALIDAÇÃO DO FORMULÁRIO
                 // ============================================
-                $('#editForm').on('submit', function(e) {
+                $('.validacaoForm').on('submit', function(e) {
                     let isValid = true;
                     let firstError = null;
                     let errorMessages = [];
@@ -344,20 +344,25 @@
                     
                     // Campos obrigatórios
                     const campos = [
-                        { id: '#editCardName', nome: 'Nome de cartão' },
-                        { id: '#editCardLimit', nome: 'Limite do cartão' },
-                        { id: '#editCardDueDate', nome: 'Data de Vencimento' },                                            
+                        { classe: '.validaCardName', nome: 'Nome de cartão' },
+                        { classe: '.validaCardLimit', nome: 'Limite do cartão' },
+                        { classe: '.validaCardDueDate', nome: 'Data de Vencimento' },                                            
                     ];
-                    
+                                        
                     campos.forEach(function(campo) {
-                        const valor = $(campo.id).val().trim();
+                        const elemento = $(campo.classe);
+                        const valor = elemento.val().trim();
+                        
                         if (valor === '') {
+
                             isValid = false;
-                            $(campo.id).addClass('is-invalid');
+                            elemento.addClass('is-invalid');
                             errorMessages.push(`${campo.nome} é obrigatório.`);
-                            if (!firstError) firstError = $(campo.id);
+                            if (!firstError) {
+                                firstError = elemento;
+                            }
                         }
-                    });                                        
+                    });
                     
                     if (!isValid) {
                         e.preventDefault();

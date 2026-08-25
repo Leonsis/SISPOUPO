@@ -160,7 +160,7 @@
                                                     <td>#12343</td>
                                                     <td>Pedro Costa</td>
                                                     <td>R$ 3.750,00</td>
-                                                    <td><span class="badge bg-danger">Cancelado</span></td>
+                                                    <td><span class="badge bg-danger">Não pago</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td>#12342</td>

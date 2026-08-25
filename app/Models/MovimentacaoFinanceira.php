@@ -71,6 +71,7 @@ class MovimentacaoFinanceira extends Model
         'data_pagamento',
         'data_vencimento',
         'dia_vencimento',
+        'Observacoes',
         'despesa_repete_mes',
     ];
 

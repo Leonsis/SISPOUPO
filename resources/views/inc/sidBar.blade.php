@@ -1,3 +1,7 @@
+@php
+    // Nome da rota atual
+    $caminho = request()->path();    
+@endphp
 <!-- Sidebar -->
 <nav class="sidebar bg-dark border-end border-warning" id="sidebar">
     <div class="sidebar-header p-3 border-bottom border-warning">
@@ -21,7 +25,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('despesas') ? 'active text-light' : '' }} " href="{{ route('despesas') }}">                
+            <a class="nav-link {{ (request()->routeIs('despesas') || $caminho === 'despesas/detalhamento') ? 'active text-light' : '' }} " href="{{ route('despesas') }}">                
                 <i class="bi bi-wallet2 me-2"></i>
                 Despesas
             </a>
