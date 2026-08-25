@@ -33,7 +33,7 @@ class UsuariosController extends Controller
         // Valida CPF/CNPJ
         if(!$this->validarCpfCnpj($vCpf_cnpj)) {
             return back()
-                    ->withErrors(['cpf_cnpj' => 'CPF/CNPJ Invalido.'])''
+                    ->withErrors(['cpf_cnpj' => 'CPF/CNPJ Invalido.'])
                     ->withInput();
         }                
 
