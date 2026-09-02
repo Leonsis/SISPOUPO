@@ -1,0 +1,39 @@
+services:
+
+  app:
+    build: .
+    container_name: sispoupo-app
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - .:/var/www/html
+      - vendor:/var/www/html/vendor
+      - storage:/var/www/html/storage
+      - bootstrap_cache:/var/www/html/bootstrap/cache
+
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: sispoupo-mysql
+
+    environment:
+      MYSQL_DATABASE: SisTasks
+      MYSQL_USER: caio
+      MYSQL_PASSWORD: '22060122'
+      MYSQL_ROOT_PASSWORD: '22060122'
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+  vendor:
+  storage:
+  bootstrap_cache:
