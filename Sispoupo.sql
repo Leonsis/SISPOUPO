@@ -65,7 +65,7 @@ CREATE TABLE movimentacao_financeira (
     grupo_id BIGINT UNSIGNED NULL,
     FOREIGN KEY (grupo_id) REFERENCES movimentacao_grupo(id) ON DELETE SET NULL,    
     data_pagamento TIMESTAMP NULL,
-    data_vencimento DATE NOT NULL,
+    data_vencimento DATE NULL,
     dia_vencimento INT NULL,
     Observacoes TEXT NULL,
     despesa_repete_mes TINYINT NOT NULL DEFAULT 1, -- 1 = Ativo, 0 = Inativo

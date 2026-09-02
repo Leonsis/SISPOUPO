@@ -407,8 +407,8 @@
                         <input type="hidden" id="deleteDespesaId">
                     </div>
                     <div class="modal-footer border-danger">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn" id="confirmDeleteBtn">
                             <i class="bi bi-trash-fill me-2"></i>
                             Excluir
                         </button>
@@ -837,7 +837,7 @@
 
                 $('#confirmDeleteBtn').on('click', function() {
                     const id = $('#deleteDespesaId').val();
-                    const url = '/despesas/delete-action/' + id;
+                    const url = '{{ route("despesas.destroy", ":id") }}'.replace(':id', id);
                     
                     $.ajax({
                         url: url,
@@ -983,9 +983,9 @@
                     return;
                 }
                 
-                // 2. Busca as despesas com despesa_repete_mes = 1
+                // 2. Busca as despesas com despesa_repete_mes = 1                
                 $.ajax({
-                    url: '/despesas/repetir',
+                    url: '{{ route("despesas.repetir") }}',
                     type: 'GET',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

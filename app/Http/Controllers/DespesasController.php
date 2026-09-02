@@ -44,14 +44,19 @@ class DespesasController extends Controller
                         // Descomentar para que o sistema busque apenas as despesas do mês atual e as despesas atrasadas do mês anterior
                         ->whereRaw("
                             (
-                                MONTH(mf.data_vencimento) = MONTH(CURDATE()) 
-                                AND YEAR(mf.data_vencimento) = YEAR(CURDATE())
+                                mf.data_vencimento IS NULL
+                                OR (
+                                    MONTH(mf.data_vencimento) = MONTH(CURDATE()) 
+                                    AND YEAR(mf.data_vencimento) = YEAR(CURDATE())
+                                )
                             )
                             OR
-                            (
-                                MONTH(mf.data_vencimento) = MONTH(CURDATE() - INTERVAL 1 MONTH)
-                                AND YEAR(mf.data_vencimento) = YEAR(CURDATE() - INTERVAL 1 MONTH)
-                                AND mf.status_pagamento = 'Atrasado'
+                            (   mf.data_vencimento IS NOT NULL
+                                OR (
+                                    MONTH(mf.data_vencimento) = MONTH(CURDATE() - INTERVAL 1 MONTH)
+                                    AND YEAR(mf.data_vencimento) = YEAR(CURDATE() - INTERVAL 1 MONTH)
+                                    AND mf.status_pagamento = 'Atrasado'
+                                )
                             )
                         ")
                         ->orderBy('mf.created_at', 'desc')
@@ -210,8 +215,7 @@ class DespesasController extends Controller
     public function storeAction(Request $request)
     {
         // Testes
-        //dd('Está no MovimentacaoFinanceiraController | Linha: ' . __LINE__);
-        dd($request->all());   
+        //dd($request->all());   
 
         // Validações básicas
         $data = $request->validate([
@@ -219,11 +223,10 @@ class DespesasController extends Controller
             'valor' => 'required|numeric|min:0',
             'classificacao_financeira' => 'required',
             'status_pagamento' => 'required',
-            //'forma_pagamento' => 'required',
             'quantidade_parcelas' => 'nullable|integer|min:0',
             'cartao_credito_id' => 'nullable|exists:cartao_credito,id',
             'data_pagamento' => 'nullable|date',
-            'dia_vencimento' => 'nullable|numeric|min:0|max:31',            
+            'dia_vencimento' => 'nullable|numeric|min:1|max:31',            
             'despesa_repete_mes' => 'nullable|boolean',
         ], [
             'descricao.required' => 'A descrição é obrigatória.',
@@ -236,8 +239,6 @@ class DespesasController extends Controller
             'classificacao_financeira.required' => 'A classificação financeira é obrigatória.',
             
             'status_pagamento.required' => 'O status de pagamento é obrigatório.',
-            
-            //'forma_pagamento.required' => 'A forma de pagamento é obrigatória.',    
             
             'quantidade_parcelas.integer' => 'O número de parcelas deve ser um número inteiro.',
             'quantidade_parcelas.min' => 'O número de parcelas deve ser maior ou igual a 0.',
@@ -253,8 +254,14 @@ class DespesasController extends Controller
             'despesa_repete_mes.boolean' => 'O campo repetir no próximo mês deve ser verdadeiro ou falso.',
         ]);
 
-        $agora = Carbon::now();
-        $data['data_vencimento'] = sprintf('%04d-%02d-%02d', $agora->year, $agora->month, $data['dia_vencimento']);
+        
+        if(!empty($data['dia_vencimento'])) {
+            $agora = Carbon::now();
+            $data['data_vencimento'] = sprintf('%04d-%02d-%02d', $agora->year, $agora->month, $data['dia_vencimento']);
+        } else {
+            $data['data_vencimento'] = $data['dia_vencimento'];
+        }
+        
         
         // ✅ Tratamento do checkbox (se não veio, é 0)
         $data['despesa_repete_mes'] = $request->has('despesa_repete_mes') ? 1 : 0;
@@ -333,9 +340,7 @@ class DespesasController extends Controller
             }
 
             // ✅ REMOVIDO: Atualização do grupo com data_fim (não usado mais)
-
             return redirect()->route('despesas')->with('success', 'Despesa parcelada criada com sucesso! ' . $quantidadeParcelas . ' parcelas geradas.');
-
         } else {
             // ============================================
             // DESPESA ÚNICA (SEM PARCELAS)
